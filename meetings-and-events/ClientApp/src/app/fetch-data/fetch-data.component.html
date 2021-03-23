@@ -1,0 +1,30 @@
+<h1 id="tableLabel">Event</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+<p *ngIf="!events"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="events">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Image</th>
+      <th>Description</th>
+      <th>Address</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let event of events">
+      <td>{{ event.title }}</td>
+      <td>{{ event.image }}</td>
+      <td>{{ event.description }}</td>
+      <td>{{ event.address }}</td>
+      <td>{{ event.date_start }}</td>
+      <td>{{ event.date_end }}</td>
+      <td>{{ event.stars_summary }}</td>
+    </tr>
+  </tbody>
+</table>
