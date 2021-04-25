@@ -20,18 +20,26 @@
         [ngClass]="{ show: isExpanded }"
       >
         <ul class="navbar-nav flex-grow">
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">
+              -UserName-
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown01">
+              <li><a class="dropdown-item" href="#">Joined</a></li>
+              <li><a class="dropdown-item" href="#"></a>Follows</li>
+              <li><a class="dropdown-item" href="#"></a>My events</li>
+              <li><a class="dropdown-item" href="#"></a>Options</li>
+            </ul>
+          </li>
+
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/signup']"
-            >Sign Up</a
+            <a class="nav-link text-dark" [routerLink]="['/logout']"
+              >Logout</a
             >
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/signin']"
-              >Sign In</a
-            >
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/fetch-data']"
+          <li class="nav-item" [routerLinkActive]="['link-activ']">
+            <a class="nav-link text-dark" [routerLink]="['/create-event']"
               >Add Event</a
             >
           </li>
