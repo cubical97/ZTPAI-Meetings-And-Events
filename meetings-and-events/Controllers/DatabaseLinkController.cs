@@ -7,6 +7,8 @@ namespace meetings_and_events.Controllers
 {
     public class DatabaseLinkController
     {
+        
+        /*
         private static DatabaseLinkController _instance;
         private static NpgsqlConnection connection;
         
@@ -56,5 +58,7 @@ namespace meetings_and_events.Controllers
             
             return complete;
         }
+        */
+        
     }
 }

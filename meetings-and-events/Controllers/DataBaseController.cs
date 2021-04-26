@@ -11,6 +11,7 @@ namespace meetings_and_events.Controllers
     public class DataBaseController : Controller
     {
         
+        /*
         // GET
         public JsonResult ConnectionTest()
         {
@@ -40,5 +41,7 @@ namespace meetings_and_events.Controllers
 
             return new List<Users>();
         }
+        */
+        
     }
 }
