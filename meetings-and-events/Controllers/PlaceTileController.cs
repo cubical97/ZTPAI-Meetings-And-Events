@@ -4,9 +4,4 @@
     {
         
     }
-
-    public class PlaceTile
-    {
-        public string title { get; set; }
-    }
 }
