@@ -9,15 +9,11 @@ namespace meetings_and_events.Controllers
         // GET image
         public ActionResult GetImage(string imageUrl)
         {
-            Console.Write("Get image request: ");
-
             if (imageUrl == null)
             {
-                Console.WriteLine("null name");
                 return null;
             }
-            Console.WriteLine(imageUrl);
-            
+
             try
             {
                 string path = "PublicImages/" + imageUrl;

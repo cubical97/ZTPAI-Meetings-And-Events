@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+
 import { AppComponent } from './app.component';
 
 import { NavMenuComponent } from './nav/nav-menu/nav-menu.component';
-import { NavMenuUserComponent } from './nav/nav-menu-user/nav-menu-user.component';
 
 import { SignInComponent } from './logging/signin/signin.component';
 import { SignUpComponent} from './logging/signup/signup.component';
@@ -36,7 +37,6 @@ import { UserOptionsComponent} from './user/user-options/user-options.component'
   declarations: [
     AppComponent,
     NavMenuComponent,
-    NavMenuUserComponent,
     SignInComponent,
     SignUpComponent,
     LogOutComponent,
@@ -59,14 +59,19 @@ import { UserOptionsComponent} from './user/user-options/user-options.component'
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    NgbModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'signin', component: SignInComponent },
       { path: 'signup', component: SignUpComponent },
 
       { path: 'logout', component: LogOutComponent },
-      { path: 'create-palce', component: CreatePlaceComponent }
-
+        
+      { path: 'addplace', component: CreatePlaceComponent },
+      { path: 'joined', component: UserListJoinComponent },
+      { path: 'follows', component: UserListFollowComponent },
+      { path: 'mypalces', component: UserCreatedPlacesComponent },
+      { path: 'options', component: UserOptionsComponent }
     ])
   ],
   providers: [],

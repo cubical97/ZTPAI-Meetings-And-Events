@@ -19,18 +19,57 @@
         class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
         [ngClass]="{ show: isExpanded }"
       >
-        <ul class="navbar-nav flex-grow">
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/signup']"
-            >Sign Up</a
-            >
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/signin']"
-              >Sign In</a
-            >
-          </li>
-        </ul>
+        <div [ngSwitch]="switch_expression">
+          <div *ngSwitchCase="match_expression_1">
+            <!---->
+            <ul class="navbar-nav flex-grow">
+              <li class="nav-item" [routerLinkActive]="['link-active']">
+                <a class="nav-link text-dark" [routerLink]="['/signup']"
+                >Sign Up</a
+                >
+              </li>
+              <li class="nav-item" [routerLinkActive]="['link-active']">
+                <a class="nav-link text-dark" [routerLink]="['/signin']"
+                >Sign In</a
+                >
+              </li>
+            </ul>
+            <!---->
+          </div>
+          <div *ngSwitchCase="match_expression_2">
+            <!---->            
+            <ul class="navbar-nav flex-grow">
+              <div class="col">
+                <div ngbDropdown class="d-inline-block">
+                  <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{this.username}}</button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <a ngbDropdownItem class="nav-link text-dark" [routerLink]="['/joined']" >Joined</a>
+                    <a ngbDropdownItem class="nav-link text-dark" [routerLink]="['/follows']" >Follows</a>
+                    <a ngbDropdownItem class="nav-link text-dark" [routerLink]="['/myplaces']" >My places</a>
+                    <a ngbDropdownItem class="nav-link text-dark" [routerLink]="['/options']" >Options</a>
+                  </div>
+                </div>
+              </div>
+              <li class="nav-item" [routerLinkActive]="['link-active']">
+                <a class="nav-link text-dark" (click)="toggle_logged()" [routerLink]="['/logout']">
+                  Logout
+                </a>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['link-active']">
+                <a class="nav-link text-dark" [routerLink]="['/addplace']">
+                  Add place
+                </a>
+              </li>
+            </ul>
+            <!---->
+          </div>
+          <div *ngSwitchDefault>error</div>
+        </div>
+        
+        
+        
+        
+        
       </div>
     </div>
   </nav>
