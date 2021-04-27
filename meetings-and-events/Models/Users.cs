@@ -10,8 +10,11 @@ namespace meetings_and_events.Models
     {
         [Key]
         public int id_user { get; set; }
+        [MaxLength(64)]
         public string username { get; set; }
-        public string password { get; set; }
+        [MaxLength(256)]
+        public byte[] password { get; set; }
+        [MaxLength(128)]
         public string email { get; set; }
         public DateTime create_date { get; set; }
         

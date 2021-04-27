@@ -13,7 +13,7 @@ namespace meetings_and_events.Models
         public int id_data { get; set; }
         [ForeignKey("Place")]
         public int id_place { get; set; }
-        public e_day_week day_week { get; set; }
+        public E_day_week day_week { get; set; }
         public TimeSpan start_date { get; set; }
         public TimeSpan end_date { get; set; }
         

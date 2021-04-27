@@ -1,6 +1,6 @@
 ﻿namespace meetings_and_events.Models
 {
-    public enum e_day_week
+    public enum E_day_week
     {
         MONDAY,
         TUESDAY,

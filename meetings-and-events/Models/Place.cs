@@ -10,9 +10,11 @@ namespace meetings_and_events.Models
     {
         [Key]
         public int id_place { get; set; }
+        [MaxLength(128)]
         public string title { get; set; }
         public string description { get; set; }
         public int id_user { get; set; }
+        [MaxLength(256)]
         public string image { get; set; }
         public DateTime create_date { get; set; }
         public bool multi_time { get; set; }

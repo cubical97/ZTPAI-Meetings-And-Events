@@ -6,7 +6,7 @@ namespace meetings_and_events.Controllers
 {
     public class ImageController : Controller
     {
-        // GET
+        // GET image
         public ActionResult GetImage(string imageUrl)
         {
             Console.Write("Get image request: ");
@@ -28,7 +28,7 @@ namespace meetings_and_events.Controllers
                 
                 return result;
             }
-            catch ( Exception e)
+            catch ( Exception )
             {
                 // Console.WriteLine(e);
             }
