@@ -2,21 +2,25 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace meetings_and_events.Models
 {
     [Table("Place")]
     public class Place
     {
-        [Key]
+        [Key, Required]
         public int id_place { get; set; }
-        [MaxLength(128)]
+        [MaxLength(128), Required]
         public string title { get; set; }
         public string description { get; set; }
+        [Required]
         public int id_user { get; set; }
         [MaxLength(256)]
         public string image { get; set; }
+        [Required]
         public DateTime create_date { get; set; }
+        [Required]
         public bool multi_time { get; set; }
         
         public virtual Place_data_onetime Place_data_onetime { get; set; }

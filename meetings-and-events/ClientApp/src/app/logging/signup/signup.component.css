@@ -42,3 +42,6 @@ body {
   resize: none;
 }
 
+.error-message {
+  color: #fa0707;
+}

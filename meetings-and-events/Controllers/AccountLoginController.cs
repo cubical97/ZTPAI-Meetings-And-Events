@@ -10,34 +10,45 @@ namespace meetings_and_events.Controllers
 {
     public class AccountLoginController : Controller
     {
-        // https://localhost:44348/accountlogin/get?password=abaca&email=admin2@mail.com
         public JsonResult Get(string email, string password)
         {
-            if (email != null && password != null)
+            LoginBlock loginBlock = new LoginBlock();
+            if (email == null || password == null)
             {
-                try
-                {
-                    using (var _context = new AppDBContext())
-                    {
-                        byte[] pass;
-                        using (SHA256 mySHA256 = SHA256.Create())
-                        {
-                            pass = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                        }
+                loginBlock.ErrorMessage = "Please, type login and password";
+                return Json(loginBlock);
+            }
 
-                        Users users = _context.users.Where(users => (users.email == email && users.password == pass)).FirstOrDefault();
-                        
-                        // TODO prepare different json
-                        
-                        return Json(users);
-                    }
-                }
-                catch (Exception e)
+            try
+            {
+                using (var _context = new AppDBContext())
                 {
-                    throw e;
+                    byte[] pass;
+                    using (SHA256 mySHA256 = SHA256.Create())
+                    {
+                        pass = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    }
+
+                    Users users = _context.users.Where(users => (users.email == email && users.password == pass))
+                        .FirstOrDefault();
+
+                    if (users != null)
+                        loginBlock.Logged = true;
+                    loginBlock.Username = users.username;
+                    loginBlock.IdUser = users.id_user;
+
+                    return Json(loginBlock);
                 }
             }
-            return Json(null);
+            catch (NullReferenceException)
+            {
+                loginBlock.ErrorMessage = "Check login and password!";
+                return Json(loginBlock);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

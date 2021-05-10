@@ -1,20 +1,19 @@
 ﻿<main class="form-signin">
   <form>
     <h1 class="h3 mb-3 fw-normal">Create your account</h1>
-    <label for="inputName" class="visually-hidden">Name</label>
-    <input type="text" id="inputName" class="form-control" placeholder="Name" required autofocus>
-    <label for="inputEmail" class="visually-hidden">Email address</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required>
-    <label for="inputPassword" class="visually-hidden">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <label for="inputPassword" class="visually-hidden">Password</label>
-    <input type="password" id="inputPassword2" class="form-control" placeholder="Password" required>
-    <label for="inputDescription" class="visually-hidden">Description</label>
-    <textarea type="text" rows="5" id="inputDescription" class="form-control" placeholder="Something about you..."></textarea>
+    <label class="visually-hidden">Name</label>
+    <input matInput name="name" type="text" [(ngModel)]="inputName" class="form-control" placeholder="Name" required autofocus>
+    <label class="visually-hidden">Email address</label>
+    <input matInput name="email" type="email" [(ngModel)]="inputEmail" class="form-control" placeholder="Email address" required>
+    <label class="visually-hidden">Password</label>
+    <input matInput name="password" type="password" [(ngModel)]="inputPassword" class="form-control" placeholder="Password" required>
+    <label class="visually-hidden">Password</label>
+    <input matInput name="password2" type="password" [(ngModel)]="inputPassword2" class="form-control" placeholder="Password" required>
 
-    <button class="w-100 btn btn-lg btn-primary" type="submit"  (click)="logged_bar()" [routerLink]="['/']">
+    <button class="w-100 btn btn-lg btn-primary" type="submit" (click)="logged_bar()">
       SignUp
     </button>
+    <label class="error-message">{{errorMessage}}</label>
 
     <p class="mt-5 mb-3 text-muted">&copy; 2021–2021</p>
 

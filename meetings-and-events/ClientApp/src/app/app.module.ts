@@ -33,6 +33,8 @@ import { UserListFollowComponent} from './user/user-list-follow/user-list-follow
 import { UserListJoinComponent} from './user/user-list-join/user-list-join.component';
 import { UserOptionsComponent} from './user/user-options/user-options.component';
 
+import { CookieService } from "ngx-cookie-service";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -74,7 +76,7 @@ import { UserOptionsComponent} from './user/user-options/user-options.component'
       { path: 'options', component: UserOptionsComponent }
     ])
   ],
-  providers: [],
+  providers: [ CookieService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
