@@ -1,34 +1,68 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace meetings_and_events.Controllers
 {
     public class ImageController : Controller
     {
-        // GET image
-        public ActionResult GetImage(string imageUrl)
+        [HttpPost]
+        [Route("uploadimg")]
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            if (imageUrl == null)
+            var uploads = "PublicImages";
+            if(!Directory.Exists(uploads))
             {
-                return null;
+                Directory.CreateDirectory(uploads);
+            }
+            if (file.Length > 0) {
+                var filePath = Path.Combine(uploads, file.FileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create)) {
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+            return Ok();
+        }
+        
+        [HttpGet]
+        [Route("getimg")]
+        public async Task<IActionResult> Getimg([FromQuery] string filename)
+        {
+            const string pattern = @"\.\."; // path test
+            var regex = new Regex(pattern, RegexOptions.IgnoreCase);
+            if (filename == null || regex.IsMatch(filename))
+            {
+                filename = "\\testimage.jpg";
             }
 
-            try
-            {
-                string path = "PublicImages/" + imageUrl;
+            var uploads = "PublicImages";
+            var filePath = Path.Combine(uploads, filename);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
 
-                FileStream stream = new FileStream(path, FileMode.Open);
-                FileStreamResult result = new FileStreamResult(stream, "image/*");
-                result.FileDownloadName = imageUrl;
-                
-                return result;
-            }
-            catch ( Exception )
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
             {
-                // Console.WriteLine(e);
+                await stream.CopyToAsync(memory);
             }
-            return null;
+            memory.Position = 0;
+
+            return File(memory, GetContentType(filePath), filename); 
+        }
+        
+        private string GetContentType(string path)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            if(!provider.TryGetContentType(path, out contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            return contentType;
         }
     }
 }
