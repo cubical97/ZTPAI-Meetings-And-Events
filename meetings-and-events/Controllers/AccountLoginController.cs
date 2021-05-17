@@ -29,7 +29,7 @@ namespace meetings_and_events.Controllers
                         pass = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(password));
                     }
 
-                    Users users = _context.users.Where(users => (users.email == email && users.password == pass))
+                    Users users = _context.Users.Where(users => (users.email == email && users.password == pass))
                         .FirstOrDefault();
 
                     if (users != null)

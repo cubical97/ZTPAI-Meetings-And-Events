@@ -15,9 +15,12 @@ namespace meetings_and_events.Models
         [Required]
         public string comment { get; set; }
         
-        [ForeignKey("User"), Required]
+        [ForeignKey("Users"), Required]
         public int id_user { get; set; }
         [ForeignKey("Place"), Required]
         public int id_place { get; set; }
+        
+        public virtual Place Place { get; set; }
+        public virtual Users Users { get; set; }
     }
 }

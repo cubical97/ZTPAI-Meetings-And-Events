@@ -10,7 +10,7 @@ using meetings_and_events.Data;
 namespace meetings_and_events.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20210510192210_meetings-and-events")]
+    [Migration("20210517210247_meetings-and-events")]
     partial class meetingsandevents
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,8 @@ namespace meetings_and_events.Migrations
                         .HasColumnType("character varying(128)");
 
                     b.HasKey("id_place");
+
+                    b.HasIndex("id_user");
 
                     b.ToTable("Place");
                 });
@@ -98,12 +100,6 @@ namespace meetings_and_events.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("Placeid_place")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Usersid_user")
-                        .HasColumnType("integer");
-
                     b.Property<string>("comment")
                         .IsRequired()
                         .HasColumnType("text");
@@ -119,9 +115,9 @@ namespace meetings_and_events.Migrations
 
                     b.HasKey("id_comment");
 
-                    b.HasIndex("Placeid_place");
+                    b.HasIndex("id_place");
 
-                    b.HasIndex("Usersid_user");
+                    b.HasIndex("id_user");
 
                     b.ToTable("Place_comments");
                 });
@@ -147,8 +143,7 @@ namespace meetings_and_events.Migrations
 
                     b.HasKey("id_data");
 
-                    b.HasIndex("id_place")
-                        .IsUnique();
+                    b.HasIndex("id_place");
 
                     b.ToTable("Place_data_multitime");
                 });
@@ -184,12 +179,6 @@ namespace meetings_and_events.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("Placeid_place")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Usersid_user")
-                        .HasColumnType("integer");
-
                     b.Property<int>("id_place")
                         .HasColumnType("integer");
 
@@ -201,9 +190,9 @@ namespace meetings_and_events.Migrations
 
                     b.HasKey("id_rate");
 
-                    b.HasIndex("Placeid_place");
+                    b.HasIndex("id_place");
 
-                    b.HasIndex("Usersid_user");
+                    b.HasIndex("id_user");
 
                     b.ToTable("Place_rate");
                 });
@@ -235,12 +224,6 @@ namespace meetings_and_events.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("Placeid_place")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Usersid_user")
-                        .HasColumnType("integer");
-
                     b.Property<int>("id_place")
                         .HasColumnType("integer");
 
@@ -249,9 +232,9 @@ namespace meetings_and_events.Migrations
 
                     b.HasKey("id_follow");
 
-                    b.HasIndex("Placeid_place");
+                    b.HasIndex("id_place");
 
-                    b.HasIndex("Usersid_user");
+                    b.HasIndex("id_user");
 
                     b.ToTable("Users_follow");
                 });
@@ -263,12 +246,6 @@ namespace meetings_and_events.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("Placeid_place")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Usersid_user")
-                        .HasColumnType("integer");
-
                     b.Property<int>("id_place")
                         .HasColumnType("integer");
 
@@ -277,9 +254,9 @@ namespace meetings_and_events.Migrations
 
                     b.HasKey("id_join");
 
-                    b.HasIndex("Placeid_place");
+                    b.HasIndex("id_place");
 
-                    b.HasIndex("Usersid_user");
+                    b.HasIndex("id_user");
 
                     b.ToTable("User_join");
                 });
@@ -314,6 +291,17 @@ namespace meetings_and_events.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("meetings_and_events.Models.Place", b =>
+                {
+                    b.HasOne("meetings_and_events.Models.Users", "Users")
+                        .WithMany("Place")
+                        .HasForeignKey("id_user")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("meetings_and_events.Models.Place_address", b =>
                 {
                     b.HasOne("meetings_and_events.Models.Place", "Place")
@@ -327,20 +315,28 @@ namespace meetings_and_events.Migrations
 
             modelBuilder.Entity("meetings_and_events.Models.Place_comments", b =>
                 {
-                    b.HasOne("meetings_and_events.Models.Place", null)
+                    b.HasOne("meetings_and_events.Models.Place", "Place")
                         .WithMany("Place_comments")
-                        .HasForeignKey("Placeid_place");
+                        .HasForeignKey("id_place")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("meetings_and_events.Models.Users", null)
+                    b.HasOne("meetings_and_events.Models.Users", "Users")
                         .WithMany("Place_comments")
-                        .HasForeignKey("Usersid_user");
+                        .HasForeignKey("id_user")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("meetings_and_events.Models.Place_data_multitime", b =>
                 {
                     b.HasOne("meetings_and_events.Models.Place", "Place")
-                        .WithOne("Place_data_multitime")
-                        .HasForeignKey("meetings_and_events.Models.Place_data_multitime", "id_place")
+                        .WithMany("Place_data_multitime")
+                        .HasForeignKey("id_place")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -360,13 +356,21 @@ namespace meetings_and_events.Migrations
 
             modelBuilder.Entity("meetings_and_events.Models.Place_rate", b =>
                 {
-                    b.HasOne("meetings_and_events.Models.Place", null)
+                    b.HasOne("meetings_and_events.Models.Place", "Place")
                         .WithMany("Place_rate")
-                        .HasForeignKey("Placeid_place");
+                        .HasForeignKey("id_place")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("meetings_and_events.Models.Users", null)
+                    b.HasOne("meetings_and_events.Models.Users", "Users")
                         .WithMany("Place_rate")
-                        .HasForeignKey("Usersid_user");
+                        .HasForeignKey("id_user")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("meetings_and_events.Models.Place_special_close", b =>
@@ -382,24 +386,40 @@ namespace meetings_and_events.Migrations
 
             modelBuilder.Entity("meetings_and_events.Models.User_follow", b =>
                 {
-                    b.HasOne("meetings_and_events.Models.Place", null)
+                    b.HasOne("meetings_and_events.Models.Place", "Place")
                         .WithMany("User_follow")
-                        .HasForeignKey("Placeid_place");
+                        .HasForeignKey("id_place")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("meetings_and_events.Models.Users", null)
+                    b.HasOne("meetings_and_events.Models.Users", "Users")
                         .WithMany("User_follow")
-                        .HasForeignKey("Usersid_user");
+                        .HasForeignKey("id_user")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("meetings_and_events.Models.User_join", b =>
                 {
-                    b.HasOne("meetings_and_events.Models.Place", null)
+                    b.HasOne("meetings_and_events.Models.Place", "Place")
                         .WithMany("User_join")
-                        .HasForeignKey("Placeid_place");
+                        .HasForeignKey("id_place")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("meetings_and_events.Models.Users", null)
+                    b.HasOne("meetings_and_events.Models.Users", "Users")
                         .WithMany("User_join")
-                        .HasForeignKey("Usersid_user");
+                        .HasForeignKey("id_user")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("meetings_and_events.Models.Place", b =>
@@ -423,6 +443,8 @@ namespace meetings_and_events.Migrations
 
             modelBuilder.Entity("meetings_and_events.Models.Users", b =>
                 {
+                    b.Navigation("Place");
+
                     b.Navigation("Place_comments");
 
                     b.Navigation("Place_rate");

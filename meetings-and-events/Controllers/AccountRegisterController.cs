@@ -53,7 +53,7 @@ namespace meetings_and_events.Controllers
             {
                 using (var _context = new AppDBContext())
                 {
-                    Users users2 = _context.users.Where(users => (users.email == email))
+                    Users users2 = _context.Users.Where(users => (users.email == email))
                         .FirstOrDefault();
                     if (users2 != null)
                     {
@@ -75,7 +75,7 @@ namespace meetings_and_events.Controllers
                     // add to database
                     try
                     {
-                        _context.users.Add(users);
+                        _context.Users.Add(users);
                         _context.SaveChanges();
                         
                         loginBlockRegister.Logged = true;

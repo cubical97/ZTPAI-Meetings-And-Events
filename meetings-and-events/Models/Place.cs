@@ -11,11 +11,12 @@ namespace meetings_and_events.Models
     {
         [Key, Required]
         public int id_place { get; set; }
+        [ForeignKey("Users"), Required]
+        public int id_user { get; set; }
+        
         [MaxLength(128), Required]
         public string title { get; set; }
         public string description { get; set; }
-        [ForeignKey("User"), Required]
-        public int id_user { get; set; }
         [MaxLength(256)]
         public string image { get; set; }
         [Required]
@@ -25,6 +26,7 @@ namespace meetings_and_events.Models
         
         public virtual Place_data_onetime Place_data_onetime { get; set; }
         public virtual Place_address Place_address { get; set; }
+        public virtual Users Users { get; set; }
         
         public virtual ICollection<Place_data_multitime> Place_data_multitime { get; set; }
         public virtual ICollection<Place_special_close> Place_special_close { get; set; }
