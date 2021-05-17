@@ -26,6 +26,9 @@ namespace meetings_and_events.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int?>("Usersid_user")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("create_date")
                         .HasColumnType("timestamp without time zone");
 
@@ -48,6 +51,8 @@ namespace meetings_and_events.Migrations
                         .HasColumnType("character varying(128)");
 
                     b.HasKey("id_place");
+
+                    b.HasIndex("Usersid_user");
 
                     b.ToTable("Place");
                 });
@@ -145,8 +150,7 @@ namespace meetings_and_events.Migrations
 
                     b.HasKey("id_data");
 
-                    b.HasIndex("id_place")
-                        .IsUnique();
+                    b.HasIndex("id_place");
 
                     b.ToTable("Place_data_multitime");
                 });
@@ -312,6 +316,13 @@ namespace meetings_and_events.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("meetings_and_events.Models.Place", b =>
+                {
+                    b.HasOne("meetings_and_events.Models.Users", null)
+                        .WithMany("Place")
+                        .HasForeignKey("Usersid_user");
+                });
+
             modelBuilder.Entity("meetings_and_events.Models.Place_address", b =>
                 {
                     b.HasOne("meetings_and_events.Models.Place", "Place")
@@ -337,8 +348,8 @@ namespace meetings_and_events.Migrations
             modelBuilder.Entity("meetings_and_events.Models.Place_data_multitime", b =>
                 {
                     b.HasOne("meetings_and_events.Models.Place", "Place")
-                        .WithOne("Place_data_multitime")
-                        .HasForeignKey("meetings_and_events.Models.Place_data_multitime", "id_place")
+                        .WithMany("Place_data_multitime")
+                        .HasForeignKey("id_place")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -421,6 +432,8 @@ namespace meetings_and_events.Migrations
 
             modelBuilder.Entity("meetings_and_events.Models.Users", b =>
                 {
+                    b.Navigation("Place");
+
                     b.Navigation("Place_comments");
 
                     b.Navigation("Place_rate");

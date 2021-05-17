@@ -33,6 +33,9 @@ import { UserListFollowComponent} from './user/user-list-follow/user-list-follow
 import { UserListJoinComponent} from './user/user-list-join/user-list-join.component';
 import { UserOptionsComponent} from './user/user-options/user-options.component';
 
+import { UploadDownloadService } from '../services/upload-download.service';
+import { UploadComponent } from './upload/upload.component';
+
 import { CookieService } from "ngx-cookie-service";
 
 @NgModule({
@@ -55,7 +58,8 @@ import { CookieService } from "ngx-cookie-service";
     UserCreatedPlacesComponent,
     UserListFollowComponent,
     UserListJoinComponent,
-    UserOptionsComponent
+    UserOptionsComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -72,11 +76,11 @@ import { CookieService } from "ngx-cookie-service";
       { path: 'addplace', component: CreatePlaceComponent },
       { path: 'joined', component: UserListJoinComponent },
       { path: 'follows', component: UserListFollowComponent },
-      { path: 'mypalces', component: UserCreatedPlacesComponent },
+      { path: 'myplaces', component: UserCreatedPlacesComponent },
       { path: 'options', component: UserOptionsComponent }
     ])
   ],
-  providers: [ CookieService ],
-  bootstrap: [AppComponent]
+  providers: [ UploadDownloadService, CookieService ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

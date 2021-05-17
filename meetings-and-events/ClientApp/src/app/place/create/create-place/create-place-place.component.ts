@@ -6,4 +6,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./create-place-place.component.css']
 })
 export class CreatePlacePlaceComponent {
+  inputCountry: string;
+  inputCity: string;
+  inputStreet: string;
+  inputNumber: string;
+
+  inputDescription: string;
+
+  errorMessage: string;
+  
+  
+  
 }

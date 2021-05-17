@@ -14,7 +14,7 @@ namespace meetings_and_events.Models
         [MaxLength(128), Required]
         public string title { get; set; }
         public string description { get; set; }
-        [Required]
+        [ForeignKey("User"), Required]
         public int id_user { get; set; }
         [MaxLength(256)]
         public string image { get; set; }
@@ -24,10 +24,11 @@ namespace meetings_and_events.Models
         public bool multi_time { get; set; }
         
         public virtual Place_data_onetime Place_data_onetime { get; set; }
-        public virtual Place_data_multitime Place_data_multitime { get; set; }
         public virtual Place_address Place_address { get; set; }
         
+        public virtual ICollection<Place_data_multitime> Place_data_multitime { get; set; }
         public virtual ICollection<Place_special_close> Place_special_close { get; set; }
+        
         public virtual ICollection<User_follow> User_follow { get; set; }
         public virtual ICollection<User_join> User_join { get; set; }
         public virtual ICollection<Place_rate> Place_rate { get; set; }

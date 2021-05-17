@@ -20,6 +20,7 @@ namespace meetings_and_events.Models
         public string email { get; set; }
         public DateTime create_date { get; set; }
         
+        public virtual ICollection<Place> Place { get; set; }
         public virtual ICollection<User_follow> User_follow { get; set; }
         public virtual ICollection<User_join> User_join { get; set; }
         public virtual ICollection<Place_rate> Place_rate { get; set; }

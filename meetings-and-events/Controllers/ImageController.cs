@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace meetings_and_events.Controllers
 {
+    [Route("image")]
+    [ApiController]
     public class ImageController : Controller
     {
         [HttpPost]
-        [Route("uploadimg")]
+        [Route("upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
             var uploads = "PublicImages";
@@ -30,14 +32,12 @@ namespace meetings_and_events.Controllers
         
         [HttpGet]
         [Route("getimg")]
-        public async Task<IActionResult> Getimg([FromQuery] string filename)
+        public async Task<IActionResult> Getimg([FromQuery] string filename = null)
         {
             const string pattern = @"\.\."; // path test
             var regex = new Regex(pattern, RegexOptions.IgnoreCase);
             if (filename == null || regex.IsMatch(filename))
-            {
-                filename = "\\testimage.jpg";
-            }
+                return NotFound();
 
             var uploads = "PublicImages";
             var filePath = Path.Combine(uploads, filename);
