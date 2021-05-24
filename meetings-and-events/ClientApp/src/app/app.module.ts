@@ -18,6 +18,7 @@ import { LogOutComponent} from './logging/logout/logout.component';
 import { HomeComponent } from './home/home.component';
 
 import { PlaceTileComponent} from './place/tile/tile.component';
+import { PlaceListComponent} from './place/list/list.component';
 import { PlaceInfoComponent} from './place/info/info.component';
 import { PlacePlaceInfoComponent} from './place/info/place-place-info/place-place-info.component';
 import { PlaceMeetingInfoComponent} from './place/info/place-meeting-info/place-meeting-info.component';
@@ -47,6 +48,7 @@ import { CookieService } from "ngx-cookie-service";
     LogOutComponent,
     HomeComponent,
     PlaceTileComponent,
+    PlaceListComponent,
     PlaceInfoComponent,
     PlacePlaceInfoComponent,
     PlaceMeetingInfoComponent,

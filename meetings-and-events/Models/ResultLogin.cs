@@ -1,6 +1,6 @@
 ﻿namespace meetings_and_events.Models
 {
-    public class LoginBlock
+    public class ResultLogin
     {
         private bool logged = false;
         private string errorMessage = null;

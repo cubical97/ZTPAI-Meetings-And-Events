@@ -12,11 +12,11 @@ namespace meetings_and_events.Controllers
     {
         public JsonResult Get(string email, string password)
         {
-            LoginBlock loginBlock = new LoginBlock();
+            ResultLogin resultLogin = new ResultLogin();
             if (email == null || password == null)
             {
-                loginBlock.ErrorMessage = "Please, type login and password";
-                return Json(loginBlock);
+                resultLogin.ErrorMessage = "Please, type login and password";
+                return Json(resultLogin);
             }
 
             try
@@ -33,17 +33,18 @@ namespace meetings_and_events.Controllers
                         .FirstOrDefault();
 
                     if (users != null)
-                        loginBlock.Logged = true;
-                    loginBlock.Username = users.username;
-                    loginBlock.IdUser = users.id_user;
+                        resultLogin.Logged = true;
+                    resultLogin.Username = users.username;
+                    resultLogin.IdUser = users.id_user;
 
-                    return Json(loginBlock);
+                    // TODO JWT Authentication
+                    return Json(resultLogin);
                 }
             }
             catch (NullReferenceException)
             {
-                loginBlock.ErrorMessage = "Check login and password!";
-                return Json(loginBlock);
+                resultLogin.ErrorMessage = "Check login and password!";
+                return Json(resultLogin);
             }
             catch (Exception e)
             {

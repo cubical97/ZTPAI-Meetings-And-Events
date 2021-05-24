@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-tile',
@@ -6,11 +6,23 @@ import { Component } from '@angular/core';
   styleUrls: ['./tile.component.css']
 })
 export class PlaceTileComponent {
-  public tile_id: number = 1;
-  public title: string = "Tytuł";
-  public image: string = "testimage.jpg";
-  public description: string = "Przykładowy opis, przykładowy opis, przykładowy opis, przykładowy opis.";
-  public address: string = "Kraków 24 Wiśniowa";
-  public likes: number = 42;
-  public dislikes: number = 1;
+  @Input() tile_id: number
+  @Input() title: string;
+  @Input() image: string;
+  @Input() description: string;
+  @Input() address: string;
+  @Input() likes: number;
+  @Input() dislikes: number;
+  @Input() username: string;
+}
+
+export class PlaceTile {
+  id_place: number;
+  title: string;
+  description: string;
+  image: string;
+  users_username: string;
+  address_city: string;
+  rate_likes: number;
+  rate_dislikes: number;
 }

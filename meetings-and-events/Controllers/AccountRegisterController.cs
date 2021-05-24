@@ -22,31 +22,31 @@ namespace meetings_and_events.Controllers
         // insert user
         public JsonResult Post(string username, string password, string email)
         {
-            LoginBlock loginBlockRegister = new LoginBlock();
-            loginBlockRegister.Logged = false;
+            ResultLogin resultLoginRegister = new ResultLogin();
+            resultLoginRegister.Logged = false;
 
             if (email == null)
             {
-                loginBlockRegister.ErrorMessage = "Please, type email";
-                return Json(loginBlockRegister);
+                resultLoginRegister.ErrorMessage = "Please, type email";
+                return Json(resultLoginRegister);
             }
 
             if (password == null)
             {
-                loginBlockRegister.ErrorMessage = "Please, type password";
-                return Json(loginBlockRegister);
+                resultLoginRegister.ErrorMessage = "Please, type password";
+                return Json(resultLoginRegister);
             }
 
             if (username == null)
             {
-                loginBlockRegister.ErrorMessage = "Please, type username";
-                return Json(loginBlockRegister);
+                resultLoginRegister.ErrorMessage = "Please, type username";
+                return Json(resultLoginRegister);
             }
 
             if (!IsValidEmail(email))
             {
-                loginBlockRegister.ErrorMessage = "Bad email!";
-                return Json(loginBlockRegister);
+                resultLoginRegister.ErrorMessage = "Bad email!";
+                return Json(resultLoginRegister);
             }
 
             try
@@ -57,8 +57,8 @@ namespace meetings_and_events.Controllers
                         .FirstOrDefault();
                     if (users2 != null)
                     {
-                        loginBlockRegister.ErrorMessage = "This login is alreadu used!";
-                        return Json(loginBlockRegister);
+                        resultLoginRegister.ErrorMessage = "This login is alreadu used!";
+                        return Json(resultLoginRegister);
                     }
 
                     Users users = new Users();
@@ -78,22 +78,22 @@ namespace meetings_and_events.Controllers
                         _context.Users.Add(users);
                         _context.SaveChanges();
                         
-                        loginBlockRegister.Logged = true;
-                        loginBlockRegister.Username = users.username;
-                        loginBlockRegister.IdUser = users.id_user;
+                        resultLoginRegister.Logged = true;
+                        resultLoginRegister.Username = users.username;
+                        resultLoginRegister.IdUser = users.id_user;
                     }
                     catch
                     {
-                        loginBlockRegister.ErrorMessage = "Can't create account!";
+                        resultLoginRegister.ErrorMessage = "Can't create account!";
                     }
                     
-                    return Json(loginBlockRegister);
+                    return Json(resultLoginRegister);
                 }
             }
             catch (NullReferenceException)
             {
-                loginBlockRegister.ErrorMessage = "Check login and password!";
-                return Json(loginBlockRegister);
+                resultLoginRegister.ErrorMessage = "Check login and password!";
+                return Json(resultLoginRegister);
             }
             catch (Exception e)
             {
