@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { PlaceTile } from "../place/tile/tile.component";
 import { HttpClient } from '@angular/common/http';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ export class HomeComponent {
   private http: HttpClient;
   private baseUrl: string;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  constructor(private router: Router, http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.http = http;
     this.baseUrl = baseUrl;
   }

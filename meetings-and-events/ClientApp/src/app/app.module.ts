@@ -38,6 +38,12 @@ import { UploadDownloadService } from '../services/upload-download.service';
 import { UploadComponent } from './upload/upload.component';
 
 import { CookieService } from "ngx-cookie-service";
+import { JwtModule } from '@auth0/angular-jwt';
+import { AuthGuardService } from "../services/auth-guard.service";
+
+export function tokenGetter() {
+  return localStorage.getItem("jwt");
+}
 
 @NgModule({
   declarations: [
@@ -73,16 +79,22 @@ import { CookieService } from "ngx-cookie-service";
       { path: 'signin', component: SignInComponent },
       { path: 'signup', component: SignUpComponent },
 
-      { path: 'logout', component: LogOutComponent },
+      { path: 'logout', component: LogOutComponent, canActivate: [AuthGuardService] },
         
-      { path: 'addplace', component: CreatePlaceComponent },
-      { path: 'joined', component: UserListJoinComponent },
-      { path: 'follows', component: UserListFollowComponent },
-      { path: 'myplaces', component: UserCreatedPlacesComponent },
-      { path: 'options', component: UserOptionsComponent }
-    ])
+      { path: 'addplace', component: CreatePlaceComponent, canActivate: [AuthGuardService] },
+      { path: 'joined', component: UserListJoinComponent, canActivate: [AuthGuardService] },
+      { path: 'follows', component: UserListFollowComponent, canActivate: [AuthGuardService] },
+      { path: 'myplaces', component: UserCreatedPlacesComponent, canActivate: [AuthGuardService] },
+      { path: 'options', component: UserOptionsComponent, canActivate: [AuthGuardService] }
+    ]), JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost:5001"],
+        disallowedRoutes: []
+      }
+    })
   ],
-  providers: [ UploadDownloadService, CookieService ],
+  providers: [ UploadDownloadService, CookieService, AuthGuardService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -3,6 +3,7 @@ import { SharedService } from './../../nav-change.service';
 import { HttpClient } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { Router } from "@angular/router";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-singup',
@@ -10,10 +11,7 @@ import { Router } from "@angular/router";
   styleUrls: ['signup.component.css']
 })
 export class SignUpComponent implements OnInit {
-  inputName: string;
-  inputEmail: string;
-  inputPassword: string;
-  inputPassword2: string;
+  invalidRegister: boolean = false;
   public errorMessage: string;
 
   private http: HttpClient;
@@ -28,29 +26,67 @@ export class SignUpComponent implements OnInit {
   ngOnInit() {
   }
 
-  logged_bar() {
-    if (this.inputName && this.inputEmail && this.inputPassword && this.inputPassword2) {
-      // TODO add input validation
+  register(form: NgForm) {
 
-      this.http.get<LoginBlock>(this.baseUrl + 'accountregister/Post?username=' + this.inputName + '&email=' + this.inputEmail + '&password=' + this.inputPassword).subscribe(result => {
-        if (result.logged) {
-          this.cookieService.set('meetings-and-events-logged', "true");
-          this.cookieService.set('meetings-and-events-iduser', result.idUser.toString());
-          this.cookieService.set('meetings-and-events-username', result.username);
 
-          this.sharedService.sendClickEvent();
-          this.router.navigate(['/']);
-        } else {
-          this.errorMessage = result.errorMessage;
-        }
-      }, error => console.error(error));
+    const credentials = {
+      'username': form.value.name,
+      'email': form.value.email,
+      'password': form.value.inputPassword
+    }
+
+    if (this.validateRegister(form.value.name, form.value.email, form.value.inputPassword, form.value.inputPassword2))
+      this.http.post(this.baseUrl + "account/register", credentials)
+          .subscribe(response => {
+            const token = (<any>response).token;
+            localStorage.setItem("jwt", token);
+            this.invalidRegister = false;
+
+            this.loggedUser(token);
+
+            this.router.navigateByUrl("/");
+          }, error => {
+            this.errorMessage = error.error;
+            this.invalidRegister = true;
+          })
+  }
+
+  validateRegister(name: string, mail: string, pass1: string, pass2: string): boolean {
+    if (!name) {
+      this.errorMessage = "Set username!";
+      this.invalidRegister = true;
+      return false;
+    }
+    if (!mail) {
+      this.errorMessage = "Set email!";
+      this.invalidRegister = true;
+      return false;
+    }
+    if (pass1.length < 8) {
+      this.errorMessage = "Password must contain at least 8 characters!";
+      this.invalidRegister = true;
+      return false;
+    }
+    if (pass1 != pass2) {
+      this.errorMessage = "Password must be the same!"
+      this.invalidRegister = true;
+      return false;
+    }
+
+    console.error("pass is ok");
+    this.invalidRegister = false;
+    return true;
+  }
+
+  loggedUser(token) {
+    if (token) {
+
+      this.http.get<string>(this.baseUrl + "account/getusername")
+          .subscribe(result => {
+            this.cookieService.set('meetings-and-events-logged', "true");
+            this.cookieService.set('meetings-and-events-username', result);
+            this.sharedService.sendClickEvent();
+          }, error => console.error(error));
     }
   }
-}
-
-interface LoginBlock {
-  logged: boolean;
-  errorMessage: string;
-  idUser: number;
-  username: string;
 }

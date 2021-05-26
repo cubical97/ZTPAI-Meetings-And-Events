@@ -14,11 +14,11 @@ export class LogOutComponent {
 
   public ngOnInit(): void {
     this.cookieService.set('meetings-and-events-logged', "false");
-    this.cookieService.set('meetings-and-events-iduser', "-1");
     this.cookieService.set('meetings-and-events-username', "unlogged");
 
     this.sharedService.sendClickEvent();
-    this.router.navigate(['/']);
+    localStorage.removeItem("jwt");
+    this.router.navigateByUrl("/");
   }
 
 }
