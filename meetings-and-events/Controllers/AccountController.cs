@@ -11,6 +11,7 @@ using meetings_and_events.Data;
 using meetings_and_events.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 
 namespace meetings_and_events.Controllers
@@ -120,20 +121,14 @@ namespace meetings_and_events.Controllers
         // insert user
         [AllowAnonymous]
         [HttpPost, Route("register")]
-
         public IActionResult Register([FromBody] RegisterModel user)
-            //public JsonResult Register(string username, string password, string email)
         {
-
             if (user == null || user.Email == null || user.Password == null || user.Username == null)
                 return BadRequest("invalid client request");
 
             if (String.IsNullOrWhiteSpace(user.Email) || String.IsNullOrWhiteSpace(user.Password) ||
                 String.IsNullOrWhiteSpace(user.Username))
                 return Unauthorized("Please, type login and password");
-
-            // ResultLogin resultLoginRegister = new ResultLogin();
-            // resultLoginRegister.Logged = false;
 
             if (!IsValidEmail(user.Email))
             {
@@ -190,6 +185,153 @@ namespace meetings_and_events.Controllers
             }
 
             return Unauthorized("Can't create account!");
+        }
+        
+        // delete user
+        [HttpPost, Route("delete")]
+        [Authorize]
+        public IActionResult Delete([FromBody] LoginModel user)
+        {
+            if (user == null || user.Email == null || user.Password == null)
+                return BadRequest("invalid request");
+
+            if (String.IsNullOrWhiteSpace(user.Email) || String.IsNullOrWhiteSpace(user.Password))
+                return Unauthorized("Please, type login and password");
+            
+            string get_email = "";
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+            var usernameClaim = claim
+                .Where(x => x.Type == ClaimTypes.Name)
+                .FirstOrDefault();
+            if (usernameClaim != null)
+                get_email = usernameClaim.Value;
+            if (!get_email.Equals(user.Email))
+                return Unauthorized("Nice try");
+            
+            try
+            {
+                using (var _context = new AppDBContext())
+                {
+                    byte[] pass;
+                    using (SHA256 mySHA256 = SHA256.Create())
+                    {
+                        pass = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                    }
+
+                    Users users = _context.Users.Where(users => (users.email == user.Email && users.password == pass))
+                        .FirstOrDefault();
+
+                    if (users != null)
+                    {
+                        using (var _contextTransaction = _context.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                var places = _context.Place.Where(place => (place.id_user == users.id_user));
+                                foreach (var place in places)
+                                {
+                                    //remove all created places with account
+                                    var record1 =
+                                        _context.Place_data_multitime.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in record1)
+                                    {
+                                        _context.Place_data_multitime.Remove(record);
+                                    }
+
+                                    var records2 =
+                                        _context.Place_data_onetime.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in records2)
+                                    {
+                                        _context.Place_data_onetime.Remove(record);
+                                    }
+
+                                    var records3 =
+                                        _context.Place_address.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in records3)
+                                    {
+                                        _context.Place_address.Remove(record);
+                                    }
+
+                                    var records4 =
+                                        _context.Place_special_close.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in records4)
+                                    {
+                                        _context.Place_special_close.Remove(record);
+                                    }
+
+                                    var records5 =
+                                        _context.Place_comments.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in records5)
+                                    {
+                                        _context.Place_comments.Remove(record);
+                                    }
+
+                                    var records6 =
+                                        _context.Place_rate.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in records6)
+                                    {
+                                        _context.Place_rate.Remove(record);
+                                    }
+
+                                    var records7 =
+                                        _context.User_follow.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in records7)
+                                    {
+                                        _context.User_follow.Remove(record);
+                                    }
+
+                                    var records8 =
+                                        _context.User_join.Where(rec => rec.id_place == place.id_place);
+                                    foreach (var record in records8)
+                                    {
+                                        _context.User_join.Remove(record);
+                                    }
+                                }
+
+                                //remove all created places with account
+                                var record9 =
+                                    _context.User_follow.Where(rec => rec.id_user == users.id_user);
+                                foreach (var record in record9)
+                                {
+                                    _context.User_follow.Remove(record);
+                                }
+
+                                var record10 =
+                                    _context.User_join.Where(rec => rec.id_user == users.id_user);
+                                foreach (var record in record10)
+                                {
+                                    _context.User_join.Remove(record);
+                                }
+
+                                var record11 =
+                                    _context.Place_rate.Where(rec => rec.id_user == users.id_user);
+                                foreach (var record in record11)
+                                {
+                                    _context.Place_rate.Remove(record);
+                                }
+
+                                _context.Users.Remove(users);
+
+                                _context.SaveChanges();
+                                _contextTransaction.Commit();
+                            }
+                            catch (Exception e)
+                            {
+                                _contextTransaction.Rollback();
+                                throw e;
+                            }
+                        }
+                        
+                        return Ok();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return Unauthorized("Error while deleting");
+            }
+            return Unauthorized("Wrong email or password");
         }
     }
 }

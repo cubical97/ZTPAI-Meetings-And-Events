@@ -73,7 +73,6 @@ export class SignUpComponent implements OnInit {
       return false;
     }
 
-    console.error("pass is ok");
     this.invalidRegister = false;
     return true;
   }

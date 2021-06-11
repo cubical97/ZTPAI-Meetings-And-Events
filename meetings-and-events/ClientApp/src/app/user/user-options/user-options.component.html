@@ -1,5 +1,34 @@
 <header>
     <div class="container">
-        options
+        <h2>Options</h2>
+        <div class="album bg-light col">
+            <form #passUpdateForm="ngForm" (ngSubmit)="changepass(passUpdateForm)">
+                <p>Change Password</p>
+                <input matInput name="password1" type="password" ngModel class="form-control" placeholder="Old Password" required>
+                <input matInput name="password2" type="password" ngModel class="form-control" placeholder="New Password" required>
+                <input matInput name="password3" type="password" ngModel class="form-control" placeholder="Confirm New Password" required>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Chenge Password</button>
+                <div *ngIf="invalidUpdate" class="alert alert-danger">
+                    {{errorMessage}}
+                </div>
+            </form>
+        </div>
+        <div class="album bg-light col">
+            <p>Delete Account</p>
+            <div *ngIf="!deleteMode">
+                <button class="btn btn-danger" (click)="deletemeunlock()">Delete Account</button>
+            </div>
+            <div *ngIf="deleteMode">
+                <form #accountDeleteForm="ngForm" (ngSubmit)="deleteme(accountDeleteForm)">
+                    <label class="alert-danger">If you want to delete your account, with all data, confirm with password</label>
+                    <input matInput name="email" type="email" ngModel class="form-control" placeholder="email" required>
+                    <input matInput name="password" type="password" ngModel class="form-control" placeholder="Password" required>
+                    <button class="btn btn-danger" type="submit">Yes, Delete Account</button>
+                </form>
+            </div>
+            <div *ngIf="invalidDelete" class="alert alert-danger">
+                {{errorMessage}}
+            </div>
+        </div>
     </div>
 </header>

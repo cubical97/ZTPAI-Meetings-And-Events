@@ -56,7 +56,7 @@ namespace meetings_and_events.Controllers
                 Users users = _context.Users.Where(users => (users.email == get_email))
                     .FirstOrDefault();
 
-                var joins = _context.User_join.ToList();
+                var joins = _context.User_join.Where(rec => (rec.id_user == users.id_user));
 
                 foreach (User_join join in joins)
                 {
@@ -92,7 +92,7 @@ namespace meetings_and_events.Controllers
                 Users users = _context.Users.Where(users => (users.email == get_email))
                     .FirstOrDefault();
 
-                var follows = _context.User_follow.ToList();
+                var follows = _context.User_follow.Where(rec => (rec.id_user == users.id_user));
 
                 foreach (User_follow follow in follows)
                 {
