@@ -1,85 +1,87 @@
-<div class="form-container">
-    <h6>Address</h6>
-    <input matInput name="country" type="text" [(ngModel)]="inputCountry" class="form-control form-textinput" placeholder="Country" required autofocus>
-    <input matInput name="city" type="text" [(ngModel)]="inputCity" class="form-control form-textinput" placeholder="City" required>
-    <input matInput name="street" type="text" [(ngModel)]="inputStreet" class="form-control form-textinput" placeholder="Street" required>
-    <input matInput name="number" type="text" [(ngModel)]="inputNumber" class="form-control form-textinput" placeholder="Number" required>
-    <textarea matInput name="description" type="text" [(ngModel)]="inputDescription" class="form-control form-textinput" placeholder="Description" required></textarea>
-    <h6>Time</h6>
+<form #createForm="ngForm" (ngSubmit)="create(createForm)">
+    <div class="form-container">
+        <h6>Address</h6>
+        <input name="country" type="text" ngModel class="form-control form-textinput" placeholder="Country" required autofocus>
+        <input name="city" type="text" ngModel class="form-control form-textinput" placeholder="City" required>
+        <input name="street" type="text" ngModel class="form-control form-textinput" placeholder="Street" required>
+        <input name="number" type="text" ngModel class="form-control form-textinput" placeholder="Number" required>
+        <textarea name="description" type="text" ngModel class="form-control form-textinput" placeholder="Description" required></textarea>
+        <h6>Time</h6>
 
-    <div class="row">
-        <div class="md-form mx-1 my-2">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="check1">
-                <label class="form-check-label" for="check1">Mon</label>
+        <div class="row">
+            <div class="md-form mx-1 my-2">
+                <div class="form-check form-switch">
+                    <input name="time1check" ngModel class="form-check-input" type="checkbox" id="check1">
+                    <label class="form-check-label" for="check1">Mon</label>
+                </div>
+                <label for="inputMDEx1o">Open</label>
+                <input name="time1Open" ngModel type="time" id="inputMDEx1o" class="form-control">
+                <label for="inputMDEx1c">Close</label>
+                <input name="time1Close" ngModel type="time" id="inputMDEx1c" class="form-control">
             </div>
-            <label for="inputMDEx1o">Open</label>
-            <input type="time" id="inputMDEx1o" class="form-control">
-            <label for="inputMDEx1c">Close</label>
-            <input type="time" id="inputMDEx1c" class="form-control">
-        </div>
-        <div class="md-form mx-1 my-2">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="check2">
-                <label class="form-check-label" for="check2">Tue</label>
+            <div class="md-form mx-1 my-2">
+                <div class="form-check form-switch">
+                    <input name="time2check" ngModel class="form-check-input" type="checkbox" id="check2">
+                    <label class="form-check-label" for="check2">Tue</label>
+                </div>
+                <label for="inputMDEx2o">Open</label>
+                <input name="time2Open" ngModel type="time" id="inputMDEx2o" class="form-control">
+                <label for="inputMDEx2c">Close</label>
+                <input name="time2Close" ngModel type="time" id="inputMDEx2c" class="form-control">
             </div>
-            <label for="inputMDEx2o">Open</label>
-            <input type="time" id="inputMDEx2o" class="form-control">
-            <label for="inputMDEx2c">Close</label>
-            <input type="time" id="inputMDEx2c" class="form-control">
-        </div>
-        <div class="md-form mx-1 my-2">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="check3">
-                <label class="form-check-label" for="check3">Wen</label>
+            <div class="md-form mx-1 my-2">
+                <div class="form-check form-switch">
+                    <input name="time3check" ngModel class="form-check-input" type="checkbox" id="check3">
+                    <label class="form-check-label" for="check3">Wen</label>
+                </div>
+                <label for="inputMDEx3o">Open</label>
+                <input name="time3Open" ngModel type="time" id="inputMDEx3o" class="form-control">
+                <label for="inputMDEx3c">Close</label>
+                <input name="time3Close" ngModel type="time" id="inputMDEx3c" class="form-control">
             </div>
-            <label for="inputMDEx3o">Open</label>
-            <input type="time" id="inputMDEx3o" class="form-control">
-            <label for="inputMDEx3c">Close</label>
-            <input type="time" id="inputMDEx3c" class="form-control">
-        </div>
-        <div class="md-form mx-1 my-2">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="check4">
-                <label class="form-check-label" for="check4">Thu</label>
+            <div class="md-form mx-1 my-2">
+                <div class="form-check form-switch">
+                    <input name="time4check" ngModel class="form-check-input" type="checkbox" id="check4">
+                    <label class="form-check-label" for="check4">Thu</label>
+                </div>
+                <label for="inputMDEx4o">Open</label>
+                <input name="time4Open" ngModel type="time" id="inputMDEx4o" class="form-control">
+                <label for="inputMDEx4c">Close</label>
+                <input name="time4Close" ngModel type="time" id="inputMDEx4c" class="form-control">
             </div>
-            <label for="inputMDEx4o">Open</label>
-            <input type="time" id="inputMDEx4o" class="form-control">
-            <label for="inputMDEx4c">Close</label>
-            <input type="time" id="inputMDEx4c" class="form-control">
-        </div>
-        <div class="md-form mx-1 my-2">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="check5">
-                <label class="form-check-label" for="check5">Fri</label>
+            <div class="md-form mx-1 my-2">
+                <div class="form-check form-switch">
+                    <input name="time5check" ngModel class="form-check-input" type="checkbox" id="check5">
+                    <label class="form-check-label" for="check5">Fri</label>
+                </div>
+                <label for="inputMDEx5o">Open</label>
+                <input name="time5Open" ngModel type="time" id="inputMDEx5o" class="form-control">
+                <label for="inputMDEx5c">Close</label>
+                <input name="time5Close" ngModel type="time" id="inputMDEx5c" class="form-control">
             </div>
-            <label for="inputMDEx5o">Open</label>
-            <input type="time" id="inputMDEx5o" class="form-control">
-            <label for="inputMDEx5c">Close</label>
-            <input type="time" id="inputMDEx5c" class="form-control">
-        </div>
-        <div class="md-form mx-1 my-2">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="check6">
-                <label class="form-check-label" for="check6">Sat</label>
+            <div class="md-form mx-1 my-2">
+                <div class="form-check form-switch">
+                    <input name="time6check" ngModel class="form-check-input" type="checkbox" id="check6">
+                    <label class="form-check-label" for="check6">Sat</label>
+                </div>
+                <label for="inputMDEx6o">Open</label>
+                <input name="time6Open" ngModel type="time" id="inputMDEx6o" class="form-control">
+                <label for="inputMDEx6c">Close</label>
+                <input name="time6Close" ngModel type="time" id="inputMDEx6c" class="form-control">
             </div>
-            <label for="inputMDEx6o">Open</label>
-            <input type="time" id="inputMDEx6o" class="form-control">
-            <label for="inputMDEx6c">Close</label>
-            <input type="time" id="inputMDEx6c" class="form-control">
-        </div>
-        <div class="md-form mx-1 my-2">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="check7">
-                <label class="form-check-label" for="check7">Sun</label>
+            <div class="md-form mx-1 my-2">
+                <div class="form-check form-switch">
+                    <input name="time7check" ngModel class="form-check-input" type="checkbox" id="check7">
+                    <label class="form-check-label" for="check7">Sun</label>
+                </div>
+                <label for="inputMDEx7o">Open</label>
+                <input name="time7Open" ngModel type="time" id="inputMDEx7o" class="form-control">
+                <label for="inputMDEx7c">Close</label>
+                <input name="time7Close" ngModel type="time" id="inputMDEx7c" class="form-control">
             </div>
-            <label for="inputMDEx7o">Open</label>
-            <input type="time" id="inputMDEx7o" class="form-control">
-            <label for="inputMDEx7c">Close</label>
-            <input type="time" id="inputMDEx7c" class="form-control">
         </div>
+
+        <label class="alert-danger">{{errorMessage}}</label>
+        <button type="submit" class="btn btn-primary">Create</button>
     </div>
-
-    <label class="alert-danger">{{errorMessage}}</label>
-    <button type="button" class="btn btn-primary">Create</button>
-</div>
+</form>
