@@ -1,7 +1,8 @@
 <form #createForm="ngForm" (ngSubmit)="create(createForm)">
     <div class="form-container">
         <h6>Address</h6>
-        <input name="country" type="text" ngModel class="form-control form-textinput" placeholder="Country" required autofocus>
+        <input name="title" type="text" ngModel class="form-control form-textinput" placeholder="Event Title" required autofocus>
+        <input name="country" type="text" ngModel class="form-control form-textinput" placeholder="Country" required>
         <input name="city" type="text" ngModel class="form-control form-textinput" placeholder="City" required>
         <input name="street" type="text" ngModel class="form-control form-textinput" placeholder="Street" required>
         <input name="number" type="text" ngModel class="form-control form-textinput" placeholder="Number" required>
