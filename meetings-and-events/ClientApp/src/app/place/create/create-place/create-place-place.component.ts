@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {NgForm} from "@angular/forms";
+import {Router} from "@angular/router";
+import {CookieService} from "ngx-cookie-service";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-create-place-place',
@@ -8,6 +11,14 @@ import {NgForm} from "@angular/forms";
 })
 export class CreatePlacePlaceComponent {
   errorMessage: string;
+
+  private http: HttpClient;
+  private baseUrl: string;
+
+  constructor(private router: Router, http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.http = http;
+    this.baseUrl = baseUrl;
+  }
 
   create(form: NgForm) {
     var description;
@@ -76,8 +87,20 @@ export class CreatePlacePlaceComponent {
       'timeOC7': timeday7
     }
 
+    console.log(credentials);
+
+    console.log(this.baseUrl);
+    
     // TODO upload
-    console.error(credentials);
+    this.http.post(this.baseUrl + "place/createplace", credentials)
+        .subscribe(response => {
+          this.errorMessage="Send OK!";
+          //TODO go to info page
+          //this.router.navigateByUrl("/options");
+        }, error => {
+          this.errorMessage = error.error;
+        })
+    //TODO show error or go
   }
 
   checkTime(checkbox, time1, time2) {

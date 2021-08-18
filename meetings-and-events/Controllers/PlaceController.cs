@@ -14,7 +14,7 @@ namespace meetings_and_events.Controllers
     public class PlaceController : Controller
     {
         private string defaultImage = "testimage.jpg";
-        
+
         [AllowAnonymous]
         public JsonResult List(int type = 0, int size = 10)
         {
@@ -32,25 +32,25 @@ namespace meetings_and_events.Controllers
 
             return new JsonResult(result.ToArray());
         }
-        
-        
+
+
         [Authorize]
         public JsonResult ListJoined()
-        { 
+        {
             List<ResultPlaceList> result = new List<ResultPlaceList>();
 
             string get_email = "";
-            
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             IEnumerable<Claim> claim = identity.Claims;
 
             var usernameClaim = claim
                 .Where(x => x.Type == ClaimTypes.Name)
                 .FirstOrDefault();
-            
+
             if (usernameClaim != null)
                 get_email = usernameClaim.Value;
-            
+
             using (var _context = new AppDBContext())
             {
                 Users users = _context.Users.Where(users => (users.email == get_email))
@@ -95,7 +95,7 @@ namespace meetings_and_events.Controllers
 
                 // var follows = _context.User_follow.Where(rec => (rec.id_user == users.id_user));
                 var follows = _context.User_follow.ToList();
-                
+
                 foreach (User_follow follow in follows)
                 {
                     Place place1 = _context.Place.Where(place => (place.id_place == follow.id_place))
@@ -107,7 +107,7 @@ namespace meetings_and_events.Controllers
 
             return new JsonResult(result.ToArray());
         }
-        
+
         [Authorize]
         public JsonResult ListUserOwn()
         {
@@ -139,6 +139,67 @@ namespace meetings_and_events.Controllers
             }
 
             return new JsonResult(result.ToArray());
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult CreatePlace([FromBody] CreatePlaceModel place)
+        {
+            if (place == null || place.Country == null || place.City == null || place.Street == null ||
+                place.Number == null)
+                return BadRequest("Invalid request");
+
+            string get_email = "";
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+            var usernameClaim = claim
+                .Where(x => x.Type == ClaimTypes.Name)
+                .FirstOrDefault();
+            if (usernameClaim != null)
+                get_email = usernameClaim.Value;
+            if (get_email.Length < 1)
+                return Unauthorized("Invalid user");
+
+            //TODO check user in database
+
+            /*
+            Console.WriteLine($"\nUser: {get_email} try to add place as:\n" +
+                              $"country: {place.Country}\ncity: {place.City}\n" +
+                              $"street: {place.Street}\n Number: {place.Number}\n");
+
+            if (place.Description != null)
+                Console.WriteLine($"description: {place.Description}\n");
+            else
+                Console.WriteLine("description: null\n");
+
+            if (place.TimeOC1 != null)
+                Console.WriteLine($"time PN: {place.TimeOC1[0]} - {place.TimeOC1[1]}");
+            if (place.TimeOC2 != null)
+                Console.WriteLine($"time WT: {place.TimeOC2[0]} - {place.TimeOC2[1]}");
+            if (place.TimeOC3 != null)
+                Console.WriteLine($"time SR: {place.TimeOC3[0]} - {place.TimeOC3[1]}");
+            if (place.TimeOC4 != null)
+                Console.WriteLine($"time CZ: {place.TimeOC4[0]} - {place.TimeOC4[1]}");
+            if (place.TimeOC5 != null)
+                Console.WriteLine($"time PT: {place.TimeOC5[0]} - {place.TimeOC5[1]}");
+            if (place.TimeOC6 != null)
+                Console.WriteLine($"time SO: {place.TimeOC6[0]} - {place.TimeOC6[1]}");
+            if (place.TimeOC7 != null)
+                Console.WriteLine($"time ND: {place.TimeOC7[0]} - {place.TimeOC7[1]}");
+                */
+
+            /*
+            if (place.City == null || place.City.Length < 1)
+                return Unauthorized("Missing city name");
+            */
+
+            //TODO validation
+
+            //TODO database update
+
+            //TODO check and return index in database
+
+            return Ok();
         }
 
         private ResultPlaceList PlaceToResult(Place place1)
