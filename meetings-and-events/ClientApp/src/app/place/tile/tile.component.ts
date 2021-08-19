@@ -14,6 +14,7 @@ export class PlaceTileComponent {
   @Input() likes: number;
   @Input() dislikes: number;
   @Input() username: string;
+  @Input() multitibe: boolean;
 }
 
 export class PlaceTile {
@@ -25,4 +26,10 @@ export class PlaceTile {
   address_city: string;
   rate_likes: number;
   rate_dislikes: number;
+  multitibe: boolean;
+
+  ngOnInit() {
+    if (!this.description || this.description.length < 1)
+      this.description = " ";
+  }
 }

@@ -8,6 +8,13 @@
     text-align: center;
 }
 
+button{
+    padding: 0;
+    border: 0;
+}
+
 .card-text {
     font-size: 13px;
+    height: 3em;
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }

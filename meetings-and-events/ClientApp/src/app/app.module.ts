@@ -85,7 +85,8 @@ export function tokenGetter() {
       { path: 'joined', component: UserListJoinComponent, canActivate: [AuthGuardService] },
       { path: 'follows', component: UserListFollowComponent, canActivate: [AuthGuardService] },
       { path: 'myplaces', component: UserCreatedPlacesComponent, canActivate: [AuthGuardService] },
-      { path: 'options', component: UserOptionsComponent, canActivate: [AuthGuardService] }
+      { path: 'options', component: UserOptionsComponent, canActivate: [AuthGuardService] },
+      { path: "info/:id", component: PlaceInfoComponent}
     ]), JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

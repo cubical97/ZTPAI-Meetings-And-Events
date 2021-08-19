@@ -33,6 +33,20 @@ namespace meetings_and_events.Controllers
             return new JsonResult(result.ToArray());
         }
 
+        [AllowAnonymous]
+        public JsonResult Placeinfo(int id)
+        {
+            ResultPlaceList result = null;
+
+            using (var _context = new AppDBContext())
+            {
+                var place = _context.Place.Where(place1 => (place1.id_place == id)).First();
+
+                result = PlaceToResult(place);
+            }
+
+            return new JsonResult(result);
+        }
 
         [Authorize]
         public JsonResult ListJoined()
@@ -262,7 +276,6 @@ namespace meetings_and_events.Controllers
                     return Unauthorized("Wrong time");
             }
 
-            //TODO database update
             using (var _context = new AppDBContext())
             {
                 using (var _contextTransaction = _context.Database.BeginTransaction())
@@ -424,8 +437,6 @@ namespace meetings_and_events.Controllers
             if (timeOpen >= timeClose)
                 return Unauthorized("Wrong time");
 
-            //TODO database update
-
             using (var _context = new AppDBContext())
             {
                 using (var _contextTransaction = _context.Database.BeginTransaction())
@@ -493,11 +504,12 @@ namespace meetings_and_events.Controllers
             result1.Id_place = place1.id_place;
             result1.Title = place1.title;
             result1.Description = place1.description;
-            if (result1.Description != null && result1.Description.Length > 46)
-                result1.Description = result1.Description.Substring(0, 45) + "..."; // skrucenie opisu do wyświetlania
+            if (result1.Description != null)
+                result1.Description = result1.Description;
             result1.Image = place1.image;
             if (result1.Image == null)
                 result1.Image = defaultImage;
+            result1.Multitime = place1.multi_time;
 
             using (var _context = new AppDBContext())
             {
