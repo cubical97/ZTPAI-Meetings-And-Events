@@ -22,6 +22,7 @@ import { PlaceListComponent} from './place/list/list.component';
 import { PlaceInfoComponent} from './place/info/info.component';
 import { PlacePlaceInfoComponent} from './place/info/place-place-info/place-place-info.component';
 import { PlaceMeetingInfoComponent} from './place/info/place-meeting-info/place-meeting-info.component';
+import { CommentsListComponent} from "./place/info/comments-list/comments-list.component";
 import { CommentsComponent} from './place/info/comments/comments.component';
 
 import { CreatePlaceComponent} from './place/create/create-place.component';
@@ -58,6 +59,7 @@ export function tokenGetter() {
     PlaceInfoComponent,
     PlacePlaceInfoComponent,
     PlaceMeetingInfoComponent,
+    CommentsListComponent,
     CommentsComponent,
     CreatePlaceComponent,
     CreatePlacePlaceComponent,

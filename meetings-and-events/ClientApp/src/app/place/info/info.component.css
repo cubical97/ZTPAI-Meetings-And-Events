@@ -1,0 +1,8 @@
+col {
+    width: 50vw;
+}
+
+textarea {
+    resize: none;
+    width: 90%;
+}

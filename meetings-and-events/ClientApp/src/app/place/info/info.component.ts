@@ -2,6 +2,7 @@ import { Component, Inject} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {PlaceTile} from "../tile/tile.component";
 import {HttpClient} from "@angular/common/http";
+import {CommentsComponent} from "./comments/comments.component";
 
 @Component({
   selector: 'app-place-info',
@@ -10,6 +11,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class PlaceInfoComponent {
   placeinfo: PlaceInfo;
+  comment_list: CommentsComponent[];
 
   private baseUrl: string;
   private http: HttpClient;
@@ -17,13 +19,19 @@ export class PlaceInfoComponent {
   constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string, http: HttpClient) {
     this.baseUrl = baseUrl;
     this.http = http;
-  }
 
-  ngOnInit() {
     var id = this.route.snapshot.paramMap.get('id');
     this.http.get<PlaceInfo>(this.baseUrl + 'place/placeinfo?id=' + id).subscribe(result => {
       this.placeinfo = result;
     }, error => console.error(error));
+
+    this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' + id).subscribe(result => {
+      this.comment_list = result;
+    }, error => console.error(error));
+  }
+
+  ngOnInit() {
+    
   }
 }
 

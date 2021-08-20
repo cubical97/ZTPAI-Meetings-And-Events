@@ -40,9 +40,58 @@ namespace meetings_and_events.Controllers
 
             using (var _context = new AppDBContext())
             {
-                var place = _context.Place.Where(place1 => (place1.id_place == id)).First();
+                try
+                {
+                    var place = _context.Place.Where(place1 => (place1.id_place == id)).First();
 
-                result = PlaceToResult(place);
+                    result = PlaceToResult(place, true);
+                }
+                catch
+                {
+                    result = null;
+                }
+            }
+
+            return new JsonResult(result);
+        }
+
+        [AllowAnonymous]
+        public JsonResult Placeinfocomments(int id)
+        {
+            List<ResultPlaceListComment> result = new List<ResultPlaceListComment>();
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    var comments = _context.Place_comments.Where(place1 => (place1.id_place == id)).ToList();
+                    comments.Reverse();
+                    foreach (Place_comments comment in comments)
+                    {
+                        ResultPlaceListComment com = new ResultPlaceListComment();
+                        com.Comment_id = comment.id_comment;
+                        com.Createdate = comment.comment_date.ToString();
+                        com.Comment = comment.comment;
+                        try
+                        {
+                            Users users = _context.Users.Where(users => (users.id_user == comment.id_user)).First();
+                            if (users != null)
+                                com.Author = users.username;
+                            else
+                                com.Author = "deleted";
+                        }
+                        catch(Exception e)
+                        {
+                            com.Author = "deleted";
+                        }
+
+                        result.Add(com);
+                    }
+                }
+                catch
+                {
+                    result = null;
+                }
             }
 
             return new JsonResult(result);
@@ -498,7 +547,7 @@ namespace meetings_and_events.Controllers
             return user;
         }
 
-        private ResultPlaceList PlaceToResult(Place place1)
+        private ResultPlaceList PlaceToResult(Place place1, bool fulladdress = false)
         {
             ResultPlaceList result1 = new ResultPlaceList();
             result1.Id_place = place1.id_place;
@@ -515,7 +564,12 @@ namespace meetings_and_events.Controllers
             {
                 var address = _context.Place_address
                     .Where(placeAddress => (placeAddress.id_place == place1.id_place)).First();
-                result1.Address_city = address.city;
+                if (fulladdress)
+                {
+                    result1.Address_city = $"{address.city} {address.number} {address.street} {address.country}";
+                }
+                else
+                    result1.Address_city = address.city;
 
                 var user = _context.Users.Where(users => (users.id_user == place1.id_user)).First();
                 result1.Users_username = user.username;
