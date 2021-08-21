@@ -92,7 +92,6 @@ export class CreatePlacePlaceComponent {
       'timeOC7': timeday7
     }
 
-    // TODO upload
     this.http.post(this.baseUrl + "place/createplace", credentials)
         .subscribe(response => {
           this.errorMessage = "Send OK!";

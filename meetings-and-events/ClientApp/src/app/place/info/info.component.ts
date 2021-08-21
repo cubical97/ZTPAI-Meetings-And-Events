@@ -1,8 +1,8 @@
 import { Component, Inject} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {PlaceTile} from "../tile/tile.component";
 import {HttpClient} from "@angular/common/http";
 import {CommentsComponent} from "./comments/comments.component";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-place-info',
@@ -12,6 +12,7 @@ import {CommentsComponent} from "./comments/comments.component";
 export class PlaceInfoComponent {
   placeinfo: PlaceInfo;
   comment_list: CommentsComponent[];
+  errorMessage: string;
 
   private baseUrl: string;
   private http: HttpClient;
@@ -30,8 +31,31 @@ export class PlaceInfoComponent {
     }, error => console.error(error));
   }
 
-  ngOnInit() {
+  createComment(form: NgForm) {
+    //TODO check account, or login
+
+    if (!form.value.comment || form.value.comment.length < 1)
+      return;
+
+    const credentials = {
+      'placeID': this.placeinfo.id_place,
+      'commentText': form.value.comment
+    }
     
+    this.errorMessage = "";
+
+    console.log(credentials);
+    
+    this.http.post(this.baseUrl + "place/createcomment", credentials)
+        .subscribe(response => {
+          this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' +
+              this.placeinfo.id_place).subscribe(result => {
+            this.comment_list = result;
+          }, error => console.error(error));
+
+        }, error => {
+          this.errorMessage = error.error;
+        })
   }
 }
 

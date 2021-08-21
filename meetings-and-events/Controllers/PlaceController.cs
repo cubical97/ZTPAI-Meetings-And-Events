@@ -80,7 +80,7 @@ namespace meetings_and_events.Controllers
                             else
                                 com.Author = "deleted";
                         }
-                        catch(Exception e)
+                        catch
                         {
                             com.Author = "deleted";
                         }
@@ -95,6 +95,57 @@ namespace meetings_and_events.Controllers
             }
 
             return new JsonResult(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult CreateComment([FromBody] CreateCommentModel new_comment)
+        {
+            if (new_comment == null)
+                return BadRequest("Invalid request");
+
+            if (new_comment.PlaceID == null || new_comment.PlaceID < 0 ||
+                String.IsNullOrWhiteSpace(new_comment.CommentText))
+                return BadRequest("Can't add empty comment");
+
+            string get_email = null;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+
+            var usernameClaim = claim
+                .Where(x => x.Type == ClaimTypes.Name)
+                .FirstOrDefault();
+            if (usernameClaim != null)
+                get_email = usernameClaim.Value;
+
+            if (String.IsNullOrWhiteSpace(get_email))
+                return Unauthorized("Account not exists");
+
+            using (var _context = new AppDBContext())
+            {
+                Users users = _context.Users.Where(users => (users.email == get_email))
+                    .FirstOrDefault();
+                if (users == null)
+                    return Unauthorized("Account not exists");
+
+                try
+                {
+                    Place_comments com = new Place_comments();
+                    com.id_place = Convert.ToInt32(new_comment.PlaceID);
+                    com.id_user = users.id_user;
+                    com.comment = new_comment.CommentText;
+
+                    _context.Place_comments.Add(com);
+                    _context.SaveChanges();
+                }
+                catch
+                {
+                    return BadRequest("Can't add comment");
+                }
+
+            }
+
+            return Ok();
         }
 
         [Authorize]
@@ -413,10 +464,9 @@ namespace meetings_and_events.Controllers
                         _context.SaveChanges();
                         _contextTransaction.Commit();
                     }
-                    catch (Exception e)
+                    catch
                     {
                         _contextTransaction.Rollback();
-                        throw e;
                         return BadRequest("Can't create new place");
                     }
                 }
@@ -515,10 +565,9 @@ namespace meetings_and_events.Controllers
                         _context.SaveChanges();
                         _contextTransaction.Commit();
                     }
-                    catch (Exception e)
+                    catch
                     {
                         _contextTransaction.Rollback();
-                        throw e;
                         return BadRequest("Can't create new event");
                     }
                 }

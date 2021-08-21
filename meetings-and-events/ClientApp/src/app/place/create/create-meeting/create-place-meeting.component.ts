@@ -82,17 +82,11 @@ export class CreatePlaceMeetingComponent {
       'timeOC': [form.value.timeOpen, form.value.timeClose]
     }
 
-    console.log(credentials);
-
-    // TODO upload
     this.http.post(this.baseUrl + "place/createmeeting", credentials)
         .subscribe(response => {
-          this.errorMessage = "Send OK!";
-          //TODO go to info page
-          //this.router.navigateByUrl("/options");
+          this.router.navigateByUrl("/options");
         }, error => {
           this.errorMessage = error.error;
         })
-    //TODO show error or go
   }
 }
