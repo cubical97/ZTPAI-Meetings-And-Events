@@ -56,6 +56,83 @@ namespace meetings_and_events.Controllers
         }
 
         [AllowAnonymous]
+        public JsonResult Placeinfodataplace(int id)
+        {
+            ResultPlaceDataPlace result;
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    Place_data_multitime[] days = _context.Place_data_multitime.Where(place1 => (place1.id_place == id))
+                        .ToArray();
+
+                    result = new ResultPlaceDataPlace();
+
+                    foreach (var day in days)
+                    {
+                        switch (day.day_week)
+                        {
+                            case E_day_week.MONDAY:
+                                result.mo = $"{day.start_date} - {day.end_date}";
+                                break;
+                            case E_day_week.TUESDAY:
+                                result.tu = $"{day.start_date} - {day.end_date}";
+                                break;
+                            case E_day_week.WEDNESDAY:
+                                result.we = $"{day.start_date} - {day.end_date}";
+                                break;
+                            case E_day_week.THURSDAY:
+                                result.th = $"{day.start_date} - {day.end_date}";
+                                break;
+                            case E_day_week.FRIDAY:
+                                result.fr = $"{day.start_date} - {day.end_date}";
+                                break;
+                            case E_day_week.SATURDAY:
+                                result.sat = $"{day.start_date} - {day.end_date}";
+                                break;
+                            case E_day_week.SUNDAY:
+                                result.sun = $"{day.start_date} - {day.end_date}";
+                                break;
+                        }
+                    }
+                }
+                catch
+                {
+                    result = null;
+                }
+            }
+
+            return new JsonResult(result);
+        }
+
+        [AllowAnonymous]
+        public JsonResult Placeinfodatameeting(int id)
+        {
+            ResultPlaceDataMeeting result = null;
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    Place_data_onetime day = _context.Place_data_onetime.Where(place1 => (place1.id_place == id))
+                        .First();
+
+                    result = new ResultPlaceDataMeeting();
+
+                    result.startdate = day.start_date.ToString();
+                    result.enddate = day.end_date.ToString();
+                }
+                catch
+                {
+                    result = null;
+                }
+            }
+
+            return new JsonResult(result);
+        }
+
+        [AllowAnonymous]
         public JsonResult Placeinfocomments(int id)
         {
             List<ResultPlaceListComment> result = new List<ResultPlaceListComment>();
