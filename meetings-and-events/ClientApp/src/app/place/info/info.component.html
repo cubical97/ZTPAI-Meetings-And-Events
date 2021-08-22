@@ -16,6 +16,30 @@
       </div>
       
       <div class="row">
+        <div [ngSwitch]=this.multitime>
+          <div *ngSwitchCase=true>
+            <!---->
+            <app-place-place-info mo="{{dateinfoplace.mo}}}"
+                                  tu="{{dateinfoplace.tu}}}"
+                                  we="{{dateinfoplace.we}}"
+                                  th="{{dateinfoplace.th}}"
+                                  fr="{{dateinfoplace.fr}}"
+                                  sat="{{dateinfoplace.sat}}"
+                                  sun="{{dateinfoplace.sun}}"
+            ></app-place-place-info>
+            <!---->
+          </div>
+          <div *ngSwitchCase=false>
+            <!---->
+            <app-place-meeting-info startdate="{{dateinfometting.startdate}}"
+                                    enddate="{{dateinfometting.enddate}}"
+            ></app-place-meeting-info>
+            <!---->
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
         <div class="col">
           <form #createForm="ngForm" (ngSubmit)="createComment(createForm)">
             <div class="row">

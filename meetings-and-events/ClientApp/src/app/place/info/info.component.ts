@@ -3,6 +3,8 @@ import {ActivatedRoute} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {CommentsComponent} from "./comments/comments.component";
 import {NgForm} from "@angular/forms";
+import {PLaceInfoDataMeeting} from "./place-meeting-info/place-meeting-info.component";
+import {PLaceInfoDataPlace} from "./place-place-info/place-place-info.component";
 
 @Component({
   selector: 'app-place-info',
@@ -13,17 +15,35 @@ export class PlaceInfoComponent {
   placeinfo: PlaceInfo;
   comment_list: CommentsComponent[];
   errorMessage: string;
-
+  multitime: boolean;
+  
   private baseUrl: string;
   private http: HttpClient;
+  
+  private dateinfometting: PLaceInfoDataMeeting;
+  private dateinfoplace: PLaceInfoDataPlace;
 
   constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string, http: HttpClient) {
     this.baseUrl = baseUrl;
     this.http = http;
+    this.multitime=false;
 
     var id = this.route.snapshot.paramMap.get('id');
     this.http.get<PlaceInfo>(this.baseUrl + 'place/placeinfo?id=' + id).subscribe(result => {
       this.placeinfo = result;
+      this.multitime=this.placeinfo.multitime;
+      if(this.multitime){
+        this.http.get<PLaceInfoDataPlace>(this.baseUrl + 'place/placeinfodataplace?id=' + id).subscribe(result => {
+          this.dateinfoplace = result;
+        }, error => console.error(error));
+        this.dateinfometting=null;
+      }
+      else {
+        this.http.get<PLaceInfoDataMeeting>(this.baseUrl + 'place/placeinfodatameeting?id=' + id).subscribe(result => {
+          this.dateinfometting = result;
+        }, error => console.error(error));
+        this.dateinfoplace=null;
+      }
     }, error => console.error(error));
 
     this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' + id).subscribe(result => {
