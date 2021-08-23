@@ -52,8 +52,10 @@ export class SignInComponent implements OnInit {
 
             this.http.get<string>(this.baseUrl + "account/getusername")
                 .subscribe(result => {
-                    this.cookieService.set('meetings-and-events-logged', "true");
-                    this.cookieService.set('meetings-and-events-username', result);
+                    const dateNow = new Date();
+                    dateNow.setMinutes(dateNow.getMinutes() + 30);
+                    this.cookieService.set('meetings-and-events-logged', "true", dateNow);
+                    this.cookieService.set('meetings-and-events-username', result, dateNow);
                     this.sharedService.sendClickEvent();
                 }, error => console.error(error));
         }

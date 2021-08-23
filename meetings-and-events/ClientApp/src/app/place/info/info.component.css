@@ -23,16 +23,26 @@
     justify-content: center;
 }
 
-.addition .row div{
+.addition div .row div{
     padding: 0 0.5em;
 }
 
-.comments form .row{
-    justify-content: center;
+.comments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-col {
-    width: 50vw;
+.comments div {
+    width: 100%;
+}
+
+.comments app-comment-list{
+    width: 100%;
+}
+
+.comments div form .row{
+    justify-content: center;
 }
 
 form .row textarea {

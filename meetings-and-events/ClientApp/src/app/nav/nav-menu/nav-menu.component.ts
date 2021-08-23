@@ -47,6 +47,7 @@ export class NavMenuComponent implements OnInit {
         this.switch_expression = this.match_expression_2
       } else {
         this.username = null;
+        this.cookieService.set('meetings-and-events-logged', "false");
         this.switch_expression = this.match_expression_1
       }
     }

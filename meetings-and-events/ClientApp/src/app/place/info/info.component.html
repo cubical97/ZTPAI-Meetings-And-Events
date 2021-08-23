@@ -33,6 +33,9 @@
         <button *ngSwitchCase="false" class="btn btn-outline-success" (click)="follow_switch()">Follow</button>
       </div>
     </div>
+    <div *ngSwitchCase="false">
+      <i>login to add follow</i>
+    </div>
   </div>
   <div class="addition">
     <div [ngSwitch]=this.multitime>
@@ -54,15 +57,20 @@
     </div>
   </div>
   <!---->
-  <div class="comments">
-    <form #createForm="ngForm" (ngSubmit)="createComment(createForm)">
-      <div class="row">
-        <textarea name="comment" type="text" ngModel class="form-control form-textinput" required></textarea>
-        <button type="submit" class="btn btn-outline-info">Send</button>
-      </div>
-    </form>
+  <div [ngSwitch]="is_logged" class="comments">
+    <div *ngSwitchCase="true">
+      <form #createForm="ngForm" (ngSubmit)="createComment(createForm)">
+        <div class="row">
+          <textarea name="comment" type="text" ngModel class="form-control form-textinput" required></textarea>
+          <button type="submit" class="btn btn-outline-info">Send</button>
+        </div>
+      </form>
+    </div>
+    <div *ngSwitchCase="false">
+      <i>login to add comment</i>
+    </div>
+    <div class="error-message">{{this.errorMessage}}</div>
   </div>
-  <div class="error-message">{{this.errorMessage}}</div>
   <!---->
   <div class="comments">
     <app-comment-list [comments]="comment_list"></app-comment-list>

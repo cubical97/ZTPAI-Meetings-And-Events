@@ -5,6 +5,7 @@ import {CommentsComponent} from "./comments/comments.component";
 import {NgForm} from "@angular/forms";
 import {PLaceInfoDataMeeting} from "./place-meeting-info/place-meeting-info.component";
 import {PLaceInfoDataPlace} from "./place-place-info/place-place-info.component";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-place-info',
@@ -35,18 +36,19 @@ export class PlaceInfoComponent {
   private color_like: number;
   private color_dislike: number;
 
-  constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string, http: HttpClient) {
+  constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string, http: HttpClient,
+              private cookieService: CookieService) {
     this.is_like = false;
     this.is_dislike = true;
 
     this.colors = ["black", "green", "red"];
     this.color_like = 0;
-    this.color_dislike = 2;
+    this.color_dislike = 0;
 
     this.is_join = false;
     this.is_follow = true;
 
-    this.is_logged = true;
+    this.is_logged = false;
 
     this.baseUrl = baseUrl;
     this.http = http;
@@ -72,6 +74,18 @@ export class PlaceInfoComponent {
     this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' + id).subscribe(result => {
       this.comment_list = result;
     }, error => console.error(error));
+  }
+  
+  ngOnInit() {
+    if (this.cookieService.check('meetings-and-events-logged')) {
+      if (this.cookieService.get('meetings-and-events-logged') === "true") {
+        this.is_logged = true;
+        this.check_likes();
+        this.check_follows();
+      } else {
+        this.is_logged = false;
+      }
+    }
   }
 
   createComment(form: NgForm) {
@@ -99,6 +113,14 @@ export class PlaceInfoComponent {
         }, error => {
           this.errorMessage = error.error;
         })
+  }
+
+  check_likes() {
+    //TODO
+  }
+
+  check_follows() {
+    //TODO
   }
 
   like_switch() {
