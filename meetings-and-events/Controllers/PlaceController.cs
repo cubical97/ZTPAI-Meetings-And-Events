@@ -75,31 +75,31 @@ namespace meetings_and_events.Controllers
                         {
                             case E_day_week.MONDAY:
                                 result.mo = $"{day.start_date.ToString().Substring(0, 5)}" +
-                                            $"- {day.end_date.ToString().Substring(0, 5)}";
+                                            $" - {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.TUESDAY:
                                 result.tu = $"{day.start_date.ToString().Substring(0, 5)}" +
-                                            $"- {day.end_date.ToString().Substring(0, 5)}";
+                                            $" - {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.WEDNESDAY:
                                 result.we = $"{day.start_date.ToString().Substring(0, 5)}" +
-                                            $"- {day.end_date.ToString().Substring(0, 5)}";
+                                            $" - {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.THURSDAY:
                                 result.th = $"{day.start_date.ToString().Substring(0, 5)}" +
-                                            $"- {day.end_date.ToString().Substring(0, 5)}";
+                                            $" - {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.FRIDAY:
                                 result.fr = $"{day.start_date.ToString().Substring(0, 5)}" +
-                                            $"- {day.end_date.ToString().Substring(0, 5)}";
+                                            $" - {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.SATURDAY:
                                 result.sat = $"{day.start_date.ToString().Substring(0, 5)}" +
-                                             $"- {day.end_date.ToString().Substring(0, 5)}";
+                                             $" - {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.SUNDAY:
                                 result.sun = $"{day.start_date.ToString().Substring(0, 5)}" +
-                                             $"- {day.end_date.ToString().Substring(0, 5)}";
+                                             $" - {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                         }
                     }

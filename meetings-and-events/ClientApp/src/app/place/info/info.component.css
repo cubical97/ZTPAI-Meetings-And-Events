@@ -1,8 +1,53 @@
+.top1, .top2 {
+    display: flex;
+    flex-direction: row;
+    margin: 1em;
+}
+
+.top1 *, .top2 * {
+    width: 50%;
+}
+
+.like, .like * {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+}
+
+.like p {
+    margin-right: 1em;
+}
+
+.addition{
+    display: flex;
+    justify-content: center;
+}
+
+.addition .row div{
+    padding: 0 0.5em;
+}
+
+.comments form .row{
+    justify-content: center;
+}
+
 col {
     width: 50vw;
 }
 
-textarea {
+form .row textarea {
     resize: none;
     width: 80%;
+}
+
+@media only screen and (max-width: 999px) {
+    .top1 {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .top1 * {
+        width: 100%;
+    }
 }
