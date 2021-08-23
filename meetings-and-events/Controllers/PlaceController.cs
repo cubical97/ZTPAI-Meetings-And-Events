@@ -74,25 +74,32 @@ namespace meetings_and_events.Controllers
                         switch (day.day_week)
                         {
                             case E_day_week.MONDAY:
-                                result.mo = $"{day.start_date} - {day.end_date}";
+                                result.mo = $"{day.start_date.ToString().Substring(0, 5)}" +
+                                            $"- {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.TUESDAY:
-                                result.tu = $"{day.start_date} - {day.end_date}";
+                                result.tu = $"{day.start_date.ToString().Substring(0, 5)}" +
+                                            $"- {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.WEDNESDAY:
-                                result.we = $"{day.start_date} - {day.end_date}";
+                                result.we = $"{day.start_date.ToString().Substring(0, 5)}" +
+                                            $"- {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.THURSDAY:
-                                result.th = $"{day.start_date} - {day.end_date}";
+                                result.th = $"{day.start_date.ToString().Substring(0, 5)}" +
+                                            $"- {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.FRIDAY:
-                                result.fr = $"{day.start_date} - {day.end_date}";
+                                result.fr = $"{day.start_date.ToString().Substring(0, 5)}" +
+                                            $"- {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.SATURDAY:
-                                result.sat = $"{day.start_date} - {day.end_date}";
+                                result.sat = $"{day.start_date.ToString().Substring(0, 5)}" +
+                                             $"- {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                             case E_day_week.SUNDAY:
-                                result.sun = $"{day.start_date} - {day.end_date}";
+                                result.sun = $"{day.start_date.ToString().Substring(0, 5)}" +
+                                             $"- {day.end_date.ToString().Substring(0, 5)}";
                                 break;
                         }
                     }
@@ -211,7 +218,7 @@ namespace meetings_and_events.Controllers
                     com.id_place = Convert.ToInt32(new_comment.PlaceID);
                     com.id_user = users.id_user;
                     com.comment = new_comment.CommentText;
-
+                    com.comment_date=DateTime.Now;
                     _context.Place_comments.Add(com);
                     _context.SaveChanges();
                 }
@@ -354,32 +361,6 @@ namespace meetings_and_events.Controllers
             Users user = LoadUser(get_email);
             if (user == null)
                 return Unauthorized("Invalid user");
-
-            /*
-            Console.WriteLine($"\nUser: {get_email} try to add place as:\n" +
-                              $"country: {place.Country}\ncity: {place.City}\n" +
-                              $"street: {place.Street}\n Number: {place.Number}\n");
-
-            if (place.Description != null)
-                Console.WriteLine($"description: {place.Description}\n");
-            else
-                Console.WriteLine("description: null\n");
-
-            if (place.TimeOC1 != null)
-                Console.WriteLine($"time PN: {place.TimeOC1[0]} - {place.TimeOC1[1]}");
-            if (place.TimeOC2 != null)
-                Console.WriteLine($"time WT: {place.TimeOC2[0]} - {place.TimeOC2[1]}");
-            if (place.TimeOC3 != null)
-                Console.WriteLine($"time SR: {place.TimeOC3[0]} - {place.TimeOC3[1]}");
-            if (place.TimeOC4 != null)
-                Console.WriteLine($"time CZ: {place.TimeOC4[0]} - {place.TimeOC4[1]}");
-            if (place.TimeOC5 != null)
-                Console.WriteLine($"time PT: {place.TimeOC5[0]} - {place.TimeOC5[1]}");
-            if (place.TimeOC6 != null)
-                Console.WriteLine($"time SO: {place.TimeOC6[0]} - {place.TimeOC6[1]}");
-            if (place.TimeOC7 != null)
-                Console.WriteLine($"time ND: {place.TimeOC7[0]} - {place.TimeOC7[1]}");
-                */
 
             if (place.Title.Length < 1)
                 return Unauthorized("Missing title");
@@ -577,21 +558,6 @@ namespace meetings_and_events.Controllers
             Users user = LoadUser(get_email);
             if (user == null)
                 return Unauthorized("Invalid user");
-
-            /*
-            Console.WriteLine($"\nUser: {get_email} try to add meeting as:\n" +
-                              $"country: {place.Country}\ncity: {place.City}\n" +
-                              $"street: {place.Street}\n Number: {place.Number}\n");
-
-            if (place.Description != null)
-                Console.WriteLine($"description: {place.Description}\n");
-            else
-                Console.WriteLine("description: null\n");
-
-
-            Console.WriteLine($"day: {place.Datepicker.Day} {place.Datepicker.Month} {place.Datepicker.Year}");
-            Console.WriteLine($"time: {place.TimeOC[0]} - {place.TimeOC[1]}");
-            */
 
             if (place.Title.Length < 1)
                 return Unauthorized("Missing title");
