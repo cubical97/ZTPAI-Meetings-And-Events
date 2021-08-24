@@ -181,6 +181,89 @@ namespace meetings_and_events.Controllers
             return new JsonResult(result);
         }
 
+        [Authorize]
+        public IActionResult Placeuserlikedislike(int id)
+        {
+            bool[] result = new bool[2] {false, false};
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    string get_email = null;
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    IEnumerable<Claim> claim = identity.Claims;
+                    var usernameClaim = claim
+                        .Where(x => x.Type == ClaimTypes.Name)
+                        .FirstOrDefault();
+                    if (usernameClaim != null)
+                        get_email = usernameClaim.Value;
+
+                    Users users = _context.Users.Where(users => (users.email == get_email))
+                        .FirstOrDefault();
+                    if (users == null)
+                        return Unauthorized("User not exists");
+
+                    var get_rate = _context.Place_rate
+                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).First();
+                    if (get_rate != null)
+                    {
+                        if (get_rate.like)
+                            result[0] = true;
+                        else
+                            result[1] = true;
+                    }
+                }
+                catch
+                {
+                    return Unauthorized("User not exists");
+                }
+            }
+
+            return new JsonResult(result);
+        }
+
+        [Authorize]
+        public IActionResult Placeuserjoinfollow(int id)
+        {
+            bool[] result = new bool[2] {false, false};
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    string get_email = null;
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    IEnumerable<Claim> claim = identity.Claims;
+                    var usernameClaim = claim
+                        .Where(x => x.Type == ClaimTypes.Name)
+                        .FirstOrDefault();
+                    if (usernameClaim != null)
+                        get_email = usernameClaim.Value;
+
+                    Users users = _context.Users.Where(users => (users.email == get_email))
+                        .FirstOrDefault();
+                    if (users == null)
+                        return Unauthorized("User not exists");
+
+                    var join = _context.User_join
+                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).First();
+                    if (join != null)
+                        result[0] = true;
+                    var follow = _context.User_join
+                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).First();
+                    if (follow != null)
+                        result[1] = true;
+                }
+                catch
+                {
+                    return Unauthorized("User not exists");
+                }
+            }
+
+            return new JsonResult(result);
+        }
+
         [HttpPost]
         [Authorize]
         public IActionResult CreateComment([FromBody] CreateCommentModel new_comment)

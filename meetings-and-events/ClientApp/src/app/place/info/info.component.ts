@@ -1,4 +1,4 @@
-import { Component, Inject} from '@angular/core';
+import { Component, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {CommentsComponent} from "./comments/comments.component";
@@ -13,6 +13,7 @@ import {CookieService} from "ngx-cookie-service";
   styleUrls: ['./info.component.css']
 })
 export class PlaceInfoComponent {
+  placeId: string;
   placeinfo: PlaceInfo;
   comment_list: CommentsComponent[];
   errorMessage: string;
@@ -39,44 +40,44 @@ export class PlaceInfoComponent {
   constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string, http: HttpClient,
               private cookieService: CookieService) {
     this.is_like = false;
-    this.is_dislike = true;
+    this.is_dislike = false;
 
     this.colors = ["black", "green", "red"];
     this.color_like = 0;
     this.color_dislike = 0;
 
     this.is_join = false;
-    this.is_follow = true;
+    this.is_follow = false;
 
     this.is_logged = false;
 
     this.baseUrl = baseUrl;
     this.http = http;
     this.multitime = false;
+  }
 
-    var id = this.route.snapshot.paramMap.get('id');
-    this.http.get<PlaceInfo>(this.baseUrl + 'place/placeinfo?id=' + id).subscribe(result => {
+  ngOnInit() {
+    this.placeId = this.route.snapshot.paramMap.get('id');
+    this.http.get<PlaceInfo>(this.baseUrl + 'place/placeinfo?id=' + this.placeId).subscribe(result => {
       this.placeinfo = result;
       this.multitime = this.placeinfo.multitime;
       if (this.multitime) {
-        this.http.get<PLaceInfoDataPlace>(this.baseUrl + 'place/placeinfodataplace?id=' + id).subscribe(result => {
+        this.http.get<PLaceInfoDataPlace>(this.baseUrl + 'place/placeinfodataplace?id=' + this.placeId).subscribe(result => {
           this.dateinfoplace = result;
         }, error => console.error(error));
         this.dateinfometting = null;
       } else {
-        this.http.get<PLaceInfoDataMeeting>(this.baseUrl + 'place/placeinfodatameeting?id=' + id).subscribe(result => {
+        this.http.get<PLaceInfoDataMeeting>(this.baseUrl + 'place/placeinfodatameeting?id=' + this.placeId).subscribe(result => {
           this.dateinfometting = result;
         }, error => console.error(error));
         this.dateinfoplace = null;
       }
     }, error => console.error(error));
 
-    this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' + id).subscribe(result => {
+    this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' + this.placeId).subscribe(result => {
       this.comment_list = result;
     }, error => console.error(error));
-  }
-  
-  ngOnInit() {
+
     if (this.cookieService.check('meetings-and-events-logged')) {
       if (this.cookieService.get('meetings-and-events-logged') === "true") {
         this.is_logged = true;
@@ -106,7 +107,7 @@ export class PlaceInfoComponent {
     this.http.post(this.baseUrl + "place/createcomment", credentials)
         .subscribe(response => {
           this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' +
-              this.placeinfo.id_place).subscribe(result => {
+              this.placeId).subscribe(result => {
             this.comment_list = result;
           }, error => console.error(error));
 
@@ -116,11 +117,37 @@ export class PlaceInfoComponent {
   }
 
   check_likes() {
-    //TODO
+    this.http.get<boolean[]>(this.baseUrl + "place/placeuserlikedislike?id=" +
+        this.placeId).subscribe(result => {
+          this.is_like = result[0];
+          this.is_dislike = result[1];
+          this.set_likes_color();
+        }, error => {
+          console.error(error.error)
+        }
+    )
+  }
+  
+  set_likes_color(){
+    if (this.is_like)
+      this.color_like = 1;
+    else
+      this.color_like = 0;
+    if (this.is_dislike)
+      this.color_dislike = 2;
+    else
+      this.color_dislike = 0;
   }
 
   check_follows() {
-    //TODO
+    this.http.get<boolean[]>(this.baseUrl + "place/placeuserjoinfollow?id=" +
+        this.placeId).subscribe(result => {
+          this.is_join = result[0];
+          this.is_follow = result[1];
+        }, error => {
+          console.error(error.error)
+        }
+    )
   }
 
   like_switch() {

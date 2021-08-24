@@ -25,12 +25,12 @@
   <div [ngSwitch]="is_logged" class="addition">
     <div *ngSwitchCase="true" class="row">
       <div [ngSwitch]="is_join">
-        <button *ngSwitchCase="true" class="btn btn-success" (click)="join_switch()">Join</button>
-        <button *ngSwitchCase="false" class="btn btn-outline-success" (click)="join_switch()">Join</button>
+        <button *ngSwitchCase="true" class="btn btn-outline-success" (click)="join_switch()">Unjoin</button>
+        <button *ngSwitchCase="false" class="btn btn-success" (click)="join_switch()">Join</button>
       </div>
       <div [ngSwitch]="is_follow">
-        <button *ngSwitchCase="true" class="btn btn-success"  (click)="follow_switch()">Follow</button>
-        <button *ngSwitchCase="false" class="btn btn-outline-success" (click)="follow_switch()">Follow</button>
+        <button *ngSwitchCase="true" class="btn btn-outline-success"  (click)="follow_switch()">Unfollow</button>
+        <button *ngSwitchCase="false" class="btn btn-success" (click)="follow_switch()">Follow</button>
       </div>
     </div>
     <div *ngSwitchCase="false">
