@@ -102,8 +102,6 @@ export class PlaceInfoComponent {
 
     this.errorMessage = "";
 
-    console.log(credentials);
-
     this.http.post(this.baseUrl + "place/createcomment", credentials)
         .subscribe(response => {
           this.http.get<CommentsComponent[]>(this.baseUrl + 'place/placeinfocomments?id=' +
@@ -127,16 +125,19 @@ export class PlaceInfoComponent {
         }
     )
   }
-  
-  set_likes_color(){
-    if (this.is_like)
-      this.color_like = 1;
-    else
-      this.color_like = 0;
-    if (this.is_dislike)
-      this.color_dislike = 2;
-    else
-      this.color_dislike = 0;
+
+  set_likes_color() {
+    this.http.get<PlaceInfo>(this.baseUrl + 'place/placeinfo?id=' + this.placeId).subscribe(result2 => {
+      this.placeinfo = result2;
+      if (this.is_like)
+        this.color_like = 1;
+      else
+        this.color_like = 0;
+      if (this.is_dislike)
+        this.color_dislike = 2;
+      else
+        this.color_dislike = 0;
+    }, error => console.error(error));
   }
 
   check_follows() {
@@ -151,23 +152,69 @@ export class PlaceInfoComponent {
   }
 
   like_switch() {
-    console.log("TODO like");
-    //TODO
+    if (!this.is_logged)
+      return;
+    const credentials = {
+      'id': this.placeinfo.id_place,
+      'like': !this.is_like,
+      'dislike': false
+    }
+
+    this.http.post(this.baseUrl + "place/placeuserlikeset", credentials)
+        .subscribe(result => {
+          this.check_likes();
+        }, error => {
+          console.error(error.error);
+        })
   }
 
   dislike_switch() {
-    console.log("TODO dislike");
-    //TODO
+    if (!this.is_logged)
+      return;
+    const credentials = {
+      'id': this.placeinfo.id_place,
+      'like:': false,
+      'dislike': !this.is_dislike
+    }
+
+    this.http.post(this.baseUrl + "place/placeuserlikeset", credentials)
+        .subscribe(result => {
+          this.check_likes();
+        }, error => {
+          console.error(error.error);
+        })
   }
 
   join_switch() {
-    console.log("TODO join");
-    //TODO
+    if (!this.is_logged)
+      return;
+    const credentials = {
+      'id': parseInt(this.placeId),
+      'setto': !this.is_join
+    }
+
+    this.http.post(this.baseUrl + "place/placeuserjoinset", credentials)
+        .subscribe(result => {
+          this.check_follows();
+        }, error => {
+          console.error(error.error);
+        })
   }
 
   follow_switch() {
-    console.log("TODO follow");
-    //TODO
+    if (!this.is_logged)
+      return;
+    const credentials = {
+      'id': parseInt(this.placeId),
+      'setto': !this.is_follow
+    }
+
+    this.http.post(this.baseUrl + "place/placeuserfollowset", credentials)
+        .subscribe(result => {
+          this.check_follows();
+        }, error => {
+          console.error(error.error);
+        })
   }
 }
 

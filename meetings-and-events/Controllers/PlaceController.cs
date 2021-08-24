@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using meetings_and_events.Data;
 using meetings_and_events.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -198,14 +200,13 @@ namespace meetings_and_events.Controllers
                         .FirstOrDefault();
                     if (usernameClaim != null)
                         get_email = usernameClaim.Value;
-
                     Users users = _context.Users.Where(users => (users.email == get_email))
                         .FirstOrDefault();
                     if (users == null)
                         return Unauthorized("User not exists");
 
                     var get_rate = _context.Place_rate
-                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).First();
+                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).FirstOrDefault();
                     if (get_rate != null)
                     {
                         if (get_rate.like)
@@ -214,9 +215,10 @@ namespace meetings_and_events.Controllers
                             result[1] = true;
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    return Unauthorized("User not exists");
+                    Console.WriteLine(e);
+                    return Unauthorized("No user");
                 }
             }
 
@@ -247,21 +249,276 @@ namespace meetings_and_events.Controllers
                         return Unauthorized("User not exists");
 
                     var join = _context.User_join
-                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).First();
+                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).FirstOrDefault();
                     if (join != null)
                         result[0] = true;
-                    var follow = _context.User_join
-                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).First();
+
+                    var follow = _context.User_follow
+                        .Where(place1 => (place1.id_place == id && place1.id_user == users.id_user)).FirstOrDefault();
                     if (follow != null)
                         result[1] = true;
                 }
-                catch
+                catch (Exception e)
                 {
-                    return Unauthorized("User not exists");
+                    Console.WriteLine(e);
+                    return Unauthorized("No user");
                 }
             }
 
             return new JsonResult(result);
+        }
+
+        public class RequestLikeSet
+        {
+            public int id { get; set; }
+            public bool like { get; set; }
+            public bool dislike { get; set; }
+        }
+
+        public class RequestJoinSet
+        {
+            public int id { get; set; }
+            public bool setto { get; set; }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Placeuserlikeset([FromBody] RequestLikeSet req)
+        {
+            if (req == null)
+                return BadRequest("Invalid request");
+
+            Users users = null;
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    string get_email = null;
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    IEnumerable<Claim> claim = identity.Claims;
+                    var usernameClaim = claim
+                        .Where(x => x.Type == ClaimTypes.Name)
+                        .FirstOrDefault();
+                    if (usernameClaim != null)
+                        get_email = usernameClaim.Value;
+
+                    users = _context.Users.Where(users => (users.email == get_email))
+                        .FirstOrDefault();
+                    if (users == null)
+                        return Unauthorized("User not exists");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return Unauthorized("No user");
+                }
+            }
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    if (req.like && req.dislike)
+                        return BadRequest("Can't add like and dislike");
+
+                    var record = _context.Place_rate.Where(place_rate =>
+                        (place_rate.id_user == users.id_user && place_rate.id_place == req.id)).FirstOrDefault();
+
+                    if (!req.like && !req.dislike && record != null)
+                    {
+                        _context.Place_rate.Remove(record);
+                        _context.SaveChanges();
+                    }
+                    else if (req.like)
+                    {
+                        if (record != null)
+                        {
+                            if (!record.like)
+                            {
+                                record.like = true;
+                                _context.Place_rate.Update(record);
+                                _context.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            record = new Place_rate();
+                            record.id_place = req.id;
+                            record.id_user = users.id_user;
+                            record.like = true;
+
+                            _context.Place_rate.Add(record);
+                            _context.SaveChanges();
+                        }
+                    }
+                    else if (req.dislike)
+                    {
+                        if (record != null)
+                        {
+                            if (record.like)
+                            {
+                                record.like = false;
+                                _context.Place_rate.Update(record);
+                                _context.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            record = new Place_rate();
+                            record.id_place = req.id;
+                            record.id_user = users.id_user;
+                            record.like = false;
+
+                            _context.Place_rate.Add(record);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Placeuserjoinset([FromBody] RequestJoinSet req)
+        {
+            if (req == null)
+                return BadRequest("Invalid request");
+
+            Users users = null;
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    string get_email = null;
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    IEnumerable<Claim> claim = identity.Claims;
+                    var usernameClaim = claim
+                        .Where(x => x.Type == ClaimTypes.Name)
+                        .FirstOrDefault();
+                    if (usernameClaim != null)
+                        get_email = usernameClaim.Value;
+
+                    users = _context.Users.Where(users => (users.email == get_email))
+                        .FirstOrDefault();
+                    if (users == null)
+                        return Unauthorized("User not exists");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return Unauthorized("No user");
+                }
+            }
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    var record = _context.User_join
+                        .Where(user_join => (user_join.id_place == req.id && user_join.id_user == users.id_user))
+                        .FirstOrDefault();
+                    if (req.setto)
+                    {
+                        if (record == null)
+                        {
+                            record = new User_join();
+                            record.id_place = req.id;
+                            record.id_user = users.id_user;
+                            _context.User_join.Add(record);
+                            _context.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        if (record != null)
+                        {
+                            _context.User_join.Remove(record);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Placeuserfollowset([FromBody] RequestJoinSet req)
+        {
+            if (req == null)
+                return BadRequest("Invalid request");
+
+            Users users = null;
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    string get_email = null;
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    IEnumerable<Claim> claim = identity.Claims;
+                    var usernameClaim = claim
+                        .Where(x => x.Type == ClaimTypes.Name)
+                        .FirstOrDefault();
+                    if (usernameClaim != null)
+                        get_email = usernameClaim.Value;
+
+                    users = _context.Users.Where(users => (users.email == get_email))
+                        .FirstOrDefault();
+                    if (users == null)
+                        return Unauthorized("User not exists");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return Unauthorized("No user");
+                }
+            }
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    var record = _context.User_follow
+                        .Where(user_join => (user_join.id_place == req.id && user_join.id_user == users.id_user))
+                        .FirstOrDefault();
+                    if (req.setto)
+                    {
+                        if (record == null)
+                        {
+                            record = new User_follow();
+                            record.id_place = req.id;
+                            record.id_user = users.id_user;
+                            _context.User_follow.Add(record);
+                            _context.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        if (record != null)
+                        {
+                            _context.User_follow.Remove(record);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            return Ok();
         }
 
         [HttpPost]
@@ -271,7 +528,7 @@ namespace meetings_and_events.Controllers
             if (new_comment == null)
                 return BadRequest("Invalid request");
 
-            if (new_comment.PlaceID == null || new_comment.PlaceID < 0 ||
+            if (new_comment.PlaceID < 0 ||
                 String.IsNullOrWhiteSpace(new_comment.CommentText))
                 return BadRequest("Can't add empty comment");
 
@@ -301,7 +558,7 @@ namespace meetings_and_events.Controllers
                     com.id_place = Convert.ToInt32(new_comment.PlaceID);
                     com.id_user = users.id_user;
                     com.comment = new_comment.CommentText;
-                    com.comment_date=DateTime.Now;
+                    com.comment_date = DateTime.Now;
                     _context.Place_comments.Add(com);
                     _context.SaveChanges();
                 }
@@ -337,12 +594,12 @@ namespace meetings_and_events.Controllers
                 Users users = _context.Users.Where(users => (users.email == get_email))
                     .FirstOrDefault();
 
-                //var joins = _context.User_join.Where(rec => (rec.id_user == users.id_user));
-                var joins = _context.User_join.ToList();
+                var joins = _context.User_join.Where(user_join => (user_join.id_user == users.id_user)).ToArray();
 
                 foreach (User_join join in joins)
                 {
-                    Place place1 = _context.Place.Where(place => (place.id_place == join.id_place))
+                    Place place1 = _context.Place
+                        .Where(place => (place.id_place == join.id_place))
                         .FirstOrDefault();
 
                     result.Add(PlaceToResult((place1)));
@@ -374,13 +631,13 @@ namespace meetings_and_events.Controllers
                 Users users = _context.Users.Where(users => (users.email == get_email))
                     .FirstOrDefault();
 
-                // var follows = _context.User_follow.Where(rec => (rec.id_user == users.id_user));
-                var follows = _context.User_follow.ToList();
+                var follows = _context.User_follow.Where(user_follow => (user_follow.id_user == users.id_user))
+                    .ToArray();
 
                 foreach (User_follow follow in follows)
                 {
-                    Place place1 = _context.Place.Where(place => (place.id_place == follow.id_place))
-                        .FirstOrDefault();
+                    Place place1 = _context.Place.Where(place =>
+                        (place.id_place == follow.id_place && place.id_user == users.id_user)).FirstOrDefault();
 
                     result.Add(PlaceToResult((place1)));
                 }
@@ -411,7 +668,7 @@ namespace meetings_and_events.Controllers
                 Users users = _context.Users.Where(users => (users.email == get_email))
                     .FirstOrDefault();
 
-                var places = _context.Place.Where(place => (place.id_user == users.id_user));
+                var places = _context.Place.Where(place => (place.id_user == users.id_user)).ToArray();
 
                 foreach (Place place1 in places)
                 {
