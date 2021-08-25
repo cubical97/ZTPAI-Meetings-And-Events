@@ -84,7 +84,7 @@ export class CreatePlaceMeetingComponent {
 
     this.http.post(this.baseUrl + "place/createmeeting", credentials)
         .subscribe(response => {
-          this.router.navigateByUrl("/options");
+          this.router.navigateByUrl("/myplaces");
         }, error => {
           this.errorMessage = error.error;
         })

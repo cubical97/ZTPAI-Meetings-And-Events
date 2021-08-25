@@ -28,7 +28,7 @@ namespace meetings_and_events.Controllers
 
                 foreach (Place place1 in place)
                 {
-                    result.Add(PlaceToResult((place1)));
+                    result.Add(PlaceToResult(place1));
                 }
             }
 
@@ -39,6 +39,31 @@ namespace meetings_and_events.Controllers
         public JsonResult Placeinfo(int id)
         {
             ResultPlaceList result = null;
+            int this_user_id = -1;
+
+            try
+            {
+                using (var _context = new AppDBContext())
+                {
+                    string get_email = null;
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    IEnumerable<Claim> claim = identity.Claims;
+                    var usernameClaim = claim
+                        .Where(x => x.Type == ClaimTypes.Name)
+                        .FirstOrDefault();
+                    if (usernameClaim != null)
+                        get_email = usernameClaim.Value;
+                    Users users = _context.Users.Where(users => (users.email == get_email))
+                        .FirstOrDefault();
+                    if (users != null)
+                    {
+                        this_user_id = users.id_user;
+                    }
+                }
+            }
+            catch
+            {
+            }
 
             using (var _context = new AppDBContext())
             {
@@ -46,7 +71,7 @@ namespace meetings_and_events.Controllers
                 {
                     var place = _context.Place.Where(place1 => (place1.id_place == id)).First();
 
-                    result = PlaceToResult(place, true);
+                    result = PlaceToResult(place, this_user_id, true);
                 }
                 catch
                 {
@@ -602,7 +627,7 @@ namespace meetings_and_events.Controllers
                         .Where(place => (place.id_place == join.id_place))
                         .FirstOrDefault();
 
-                    result.Add(PlaceToResult((place1)));
+                    result.Add(PlaceToResult(place1));
                 }
             }
 
@@ -639,7 +664,7 @@ namespace meetings_and_events.Controllers
                     Place place1 = _context.Place.Where(place =>
                         (place.id_place == follow.id_place && place.id_user == users.id_user)).FirstOrDefault();
 
-                    result.Add(PlaceToResult((place1)));
+                    result.Add(PlaceToResult(place1));
                 }
             }
 
@@ -672,7 +697,7 @@ namespace meetings_and_events.Controllers
 
                 foreach (Place place1 in places)
                 {
-                    result.Add(PlaceToResult((place1)));
+                    result.Add(PlaceToResult(place1));
                 }
             }
 
@@ -979,7 +1004,7 @@ namespace meetings_and_events.Controllers
             return user;
         }
 
-        private ResultPlaceList PlaceToResult(Place place1, bool fulladdress = false)
+        private ResultPlaceList PlaceToResult(Place place1, int user_id = -1, bool fulladdress = false)
         {
             ResultPlaceList result1 = new ResultPlaceList();
             result1.Id_place = place1.id_place;
@@ -1010,6 +1035,10 @@ namespace meetings_and_events.Controllers
 
                 result1.Rate_likes = 0;
                 result1.Rate_dislikes = 0;
+                if (user_id == place1.id_user)
+                    result1.Own = true;
+                else
+                    result1.Own = false;
                 foreach (var rate1 in rate)
                 {
                     if (rate1.like)

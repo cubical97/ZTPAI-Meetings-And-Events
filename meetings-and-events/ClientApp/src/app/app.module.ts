@@ -29,6 +29,10 @@ import { CreatePlaceComponent} from './place/create/create-place.component';
 import { CreatePlacePlaceComponent} from './place/create/create-place/create-place-place.component';
 import { CreatePlaceMeetingComponent} from './place/create/create-meeting/create-place-meeting.component';
 
+import { EditPlaceComponent } from "./place/edit/edit-place.component";
+import { EditPlacePlaceComponent } from "./place/edit/edit-place/edit-place-place.component";
+import { EditPlaceMeetingComponent } from "./place/edit/edit-meeting/edit-place-meeting.component";
+
 import { UserInfoComponent} from './user/user-info/user-info.component';
 import { UserCreatedPlacesComponent} from './user/user-created-places/user-created-places.component';
 import { UserListFollowComponent} from './user/user-list-follow/user-list-follow.component';
@@ -64,6 +68,9 @@ export function tokenGetter() {
     CreatePlaceComponent,
     CreatePlacePlaceComponent,
     CreatePlaceMeetingComponent,
+    EditPlaceComponent,
+    EditPlacePlaceComponent,
+    EditPlaceMeetingComponent,
     UserInfoComponent,
     UserCreatedPlacesComponent,
     UserListFollowComponent,
@@ -72,23 +79,24 @@ export function tokenGetter() {
     UploadComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
     HttpClientModule,
     FormsModule,
     NgbModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'signin', component: SignInComponent },
-      { path: 'signup', component: SignUpComponent },
+      {path: '', component: HomeComponent, pathMatch: 'full'},
+      {path: 'signin', component: SignInComponent},
+      {path: 'signup', component: SignUpComponent},
 
-      { path: 'logout', component: LogOutComponent, canActivate: [AuthGuardService] },
-        
-      { path: 'addplace', component: CreatePlaceComponent, canActivate: [AuthGuardService] },
-      { path: 'joined', component: UserListJoinComponent, canActivate: [AuthGuardService] },
-      { path: 'follows', component: UserListFollowComponent, canActivate: [AuthGuardService] },
-      { path: 'myplaces', component: UserCreatedPlacesComponent, canActivate: [AuthGuardService] },
-      { path: 'options', component: UserOptionsComponent, canActivate: [AuthGuardService] },
-      { path: "info/:id", component: PlaceInfoComponent}
+      {path: 'logout', component: LogOutComponent, canActivate: [AuthGuardService]},
+
+      {path: 'addplace', component: CreatePlaceComponent, canActivate: [AuthGuardService]},
+      {path: 'joined', component: UserListJoinComponent, canActivate: [AuthGuardService]},
+      {path: 'follows', component: UserListFollowComponent, canActivate: [AuthGuardService]},
+      {path: 'myplaces', component: UserCreatedPlacesComponent, canActivate: [AuthGuardService]},
+      {path: 'options', component: UserOptionsComponent, canActivate: [AuthGuardService]},
+      {path: "info/:id", component: PlaceInfoComponent},
+      {path: "myplaceedit/:id", component: EditPlaceComponent, canActivate: [AuthGuardService]}
     ]), JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -97,7 +105,7 @@ export function tokenGetter() {
       }
     })
   ],
-  providers: [ UploadDownloadService, CookieService, AuthGuardService ],
-  bootstrap: [ AppComponent ]
+  providers: [UploadDownloadService, CookieService, AuthGuardService],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {CommentsComponent} from "./comments/comments.component";
 import {NgForm} from "@angular/forms";
@@ -37,8 +37,8 @@ export class PlaceInfoComponent {
   private color_like: number;
   private color_dislike: number;
 
-  constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string, http: HttpClient,
-              private cookieService: CookieService) {
+  constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string,
+              http: HttpClient, private cookieService: CookieService) {
     this.is_like = false;
     this.is_dislike = false;
 
@@ -228,4 +228,5 @@ class PlaceInfo {
   rate_likes: number;
   rate_dislikes: number;
   multitime: boolean;
+  own: boolean;
 }

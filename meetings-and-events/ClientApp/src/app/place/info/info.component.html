@@ -32,6 +32,11 @@
         <button *ngSwitchCase="true" class="btn btn-outline-success"  (click)="follow_switch()">Unfollow</button>
         <button *ngSwitchCase="false" class="btn btn-success" (click)="follow_switch()">Follow</button>
       </div>
+      <div [ngSwitch]="placeinfo.own">
+        <div *ngSwitchCase="true">
+          <button *ngSwitchCase="true" class="btn btn-outline-warning" [routerLink]="['/myplaceedit/'+this.placeinfo.id_place]">Edit</button>
+        </div>
+      </div>
     </div>
     <div *ngSwitchCase="false">
       <i>login to add follow</i>

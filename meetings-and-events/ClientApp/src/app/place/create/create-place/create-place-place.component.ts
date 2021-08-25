@@ -94,9 +94,7 @@ export class CreatePlacePlaceComponent {
 
     this.http.post(this.baseUrl + "place/createplace", credentials)
         .subscribe(response => {
-          this.errorMessage = "Send OK!";
-          //TODO go to info page
-          //this.router.navigateByUrl("/options");
+          this.router.navigateByUrl("/myplaces");
         }, error => {
           this.errorMessage = error.error;
         })

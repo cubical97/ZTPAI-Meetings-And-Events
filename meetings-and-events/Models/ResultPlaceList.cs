@@ -11,6 +11,7 @@
         private int rate_likes;
         private int rate_dislikes;
         private bool multitime;
+        private bool own;
 
         public int Id_place
         {
@@ -64,6 +65,12 @@
         {
             get => multitime;
             set => multitime = value;
+        }
+
+        public bool Own
+        {
+            get => own;
+            set => own = value;
         }
     }
 }
