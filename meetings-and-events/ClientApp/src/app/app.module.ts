@@ -32,6 +32,7 @@ import { CreatePlaceMeetingComponent} from './place/create/create-meeting/create
 import { EditPlaceComponent } from "./place/edit/edit-place.component";
 import { EditPlacePlaceComponent } from "./place/edit/edit-place/edit-place-place.component";
 import { EditPlaceMeetingComponent } from "./place/edit/edit-meeting/edit-place-meeting.component";
+import { EditImageComponent } from "./place/edit/edit-image/edit-image.component";
 
 import { UserInfoComponent} from './user/user-info/user-info.component';
 import { UserCreatedPlacesComponent} from './user/user-created-places/user-created-places.component';
@@ -71,6 +72,7 @@ export function tokenGetter() {
     EditPlaceComponent,
     EditPlacePlaceComponent,
     EditPlaceMeetingComponent,
+    EditImageComponent,
     UserInfoComponent,
     UserCreatedPlacesComponent,
     UserListFollowComponent,
