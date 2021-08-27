@@ -153,9 +153,9 @@ namespace meetings_and_events.Controllers
                         .First();
 
                     result = new ResultPlaceDataMeeting();
-
-                    result.startdate = day.start_date.ToString();
-                    result.enddate = day.end_date.ToString();
+                    result.date = day.start_date.ToString("yyyy'-'MM'-'dd");
+                    result.starttime = day.start_date.ToShortTimeString();
+                    result.endtime = day.end_date.ToShortTimeString();
                 }
                 catch
                 {

@@ -1,33 +1,29 @@
-<h5>Edit event {{this.placeId}}</h5>
-<form #createForm="ngForm" (ngSubmit)="create(createForm)">
-    <div class="form-container">
-        <div class="container">
-            <h6>Address</h6>
-            <input name="title" type="text" ngModel class="form-control form-textinput" placeholder="Event Title" required autofocus>
-            <input name="country" type="text" ngModel class="form-control form-textinput" placeholder="Country" required>
-            <input name="city" type="text" ngModel class="form-control form-textinput" placeholder="City" required>
-            <input name="street" type="text" ngModel class="form-control form-textinput" placeholder="Street" required>
-            <input name="number" type="text" ngModel class="form-control form-textinput" placeholder="Number" required>
-            <textarea name="description" type="text" ngModel class="form-control form-textinput" placeholder="Description" required></textarea>
-            
-            <h6>Time</h6>
-            <div class="form-group">
-                <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd"
-                           name="dp" ngModel ngbDatepicker #d="ngbDatepicker">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-                    </div>
-                </div>
-            </div>
-            
-            <label for="inputMDEx1o">Start</label>
-            <input name="timeOpen" type="time" ngModel id="inputMDEx1o" class="form-control">
-            <label for="inputMDEx1c">End</label>
-            <input name="timeClose" type="time" ngModel id="inputMDEx1c" class="form-control">
+<h5>Edit name</h5>
+<form #createForm="ngForm" (ngSubmit)="changeDate(createForm)">
+    <h6>Time</h6>
+    <div class="form-group">
+        <div class="input-group">            
+            <input class="form-control"
+                   [value]="this.old_date"
+                   placeholder="yyyy-mm-dd"
+                   name="dp" ngModel ngbDatepicker
+                   #d="ngbDatepicker"
+                   (click)="d.open()">
         </div>
-
-        <label class="alert-danger">{{errorMessage}}</label>
-        <button type="submit" class="btn btn-primary">Create</button>
     </div>
+
+    <label for="inputMDEx1o">Start</label>
+    <input name="timeOpen" id="inputMDEx1o"
+           [value]="this.old_starttime"
+           type="time"class="form-control"
+           (change)="onKeyStarttime($event)">
+    <label for="inputMDEx1c">End</label>
+    <input name="timeClose" id="inputMDEx1c"
+           [value]="this.old_endtime"
+           type="time"
+           class="form-control"
+           (change)="onKeyEndtime($event)">
+
+    <label class="alert-danger">{{errorMessage}}</label>
+    <button class="btn btn-success" type="submit">Apply</button>
 </form>

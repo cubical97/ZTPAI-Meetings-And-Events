@@ -35,4 +35,6 @@ export class EditImageComponent {
     if (this.oldImage)
       this.isImage = true;
   }
+  
+  //TODO edit image front
 }

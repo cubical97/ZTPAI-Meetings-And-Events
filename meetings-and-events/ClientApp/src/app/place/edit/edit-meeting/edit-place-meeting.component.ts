@@ -2,6 +2,7 @@ import {Component, Inject, Input} from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {PLaceInfoDataMeeting} from "../../info/place-meeting-info/place-meeting-info.component";
 
 @Component({
   selector: 'app-edit-place-meeting',
@@ -13,82 +14,48 @@ export class EditPlaceMeetingComponent {
 
   errorMessage: string;
 
-  private good_request: boolean;
-
   private http: HttpClient;
   private baseUrl: string;
-  
+
+  private dateinfometting: PLaceInfoDataMeeting;
+
+  private old_date: string;
+  private old_starttime: string;
+  private old_endtime: string;
+
+  private new_date: string;
+  private new_starttime: string;
+  private new_endtime: string;
+
   constructor(private router: Router, http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.http = http;
     this.baseUrl = baseUrl;
   }
 
-  create(form: NgForm) {
-    var description;
+  ngOnInit() {
+    this.http.get<PLaceInfoDataMeeting>(this.baseUrl + 'place/placeinfodatameeting?id=' + this.placeId).subscribe(result => {
+      this.dateinfometting = result;
+      this.new_date = this.old_date = this.dateinfometting.date;
+      this.new_starttime = this.old_starttime = this.dateinfometting.starttime;
+      this.new_endtime = this.old_endtime = this.dateinfometting.endtime;
+    }, error => console.error(error));
+  }
 
-    this.good_request = true;
+  onKeyStarttime(event: any) {
+    this.new_starttime = event.target.value;
+  }
 
-    this.errorMessage = "";
-    if (!form.value.title || form.value.country.title < 1) {
-      this.errorMessage = "Title too short\n";
-      this.good_request = false;
-    }
-    if (!form.value.country || form.value.country.length < 1) {
-      this.errorMessage += "Country name too short\n";
-      this.good_request = false;
-    }
-    if (!form.value.city || form.value.city.length < 1) {
-      this.errorMessage += "City name too short\n";
-      this.good_request = false;
-    }
-    if (!form.value.street || form.value.street.length < 1) {
-      this.errorMessage += "Street name too short\n";
-      this.good_request = false;
-    }
-    if (!form.value.number || form.value.number.length < 1) {
-      this.errorMessage += "Number name too short\n";
-      this.good_request = false;
-    }
-    if (!form.value.description || form.value.description.length < 1)
-      description = null;
-    else
-      description = form.value.description;
+  onKeyEndtime(event: any) {
+    this.new_endtime = event.target.value;
+  }
 
-    if (!form.value.dp) {
-      this.errorMessage += "Date not set\n";
-      this.good_request = false;
-    }
-
-    if (!form.value.timeOpen || !form.value.timeClose) {
-      this.errorMessage += "Time not set\n";
-      this.good_request = false;
-    } else {
-      if (form.value.timeOpen >= form.value.timeClose) {
-        this.errorMessage += "Close time may be after open time\n";
-        this.good_request = false;
-      }
-    }
-
-    if (!this.good_request)
-      return;
-
-
+  changeDate(form: NgForm) {
+    if (form.value.dp)
+      this.new_date = form.value.dp;
     const credentials = {
-      'title': form.value.title,
-      'country': form.value.country,
-      'city': form.value.city,
-      'street': form.value.street,
-      'number': form.value.number,
-      'description': description,
-      'datepicker': form.value.dp,
-      'timeOC': [form.value.timeOpen, form.value.timeClose]
+      'datepicker': this.new_date,
+      'timeOC:': [this.new_starttime, this.new_endtime]
     }
-
-    this.http.post(this.baseUrl + "place/createmeeting", credentials)
-        .subscribe(response => {
-          this.router.navigateByUrl("/myplaces");
-        }, error => {
-          this.errorMessage = error.error;
-        })
+    console.log(credentials);
   }
 }

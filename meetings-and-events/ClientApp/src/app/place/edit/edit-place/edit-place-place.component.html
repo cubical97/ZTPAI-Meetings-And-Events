@@ -1,89 +1,177 @@
-<h5>Edit place {{this.placeId}}</h5>
-<form #createForm="ngForm" (ngSubmit)="create(createForm)">
+<h5>Edit times</h5>
+<form #createForm="ngForm" (ngSubmit)="apply(createForm)">
     <div class="form-container">
-        <h6>Address</h6>
-        <input name="title" type="text" ngModel class="form-control form-textinput" placeholder="Event Title" required autofocus>
-        <input name="country" type="text" ngModel class="form-control form-textinput" placeholder="Country" required>
-        <input name="city" type="text" ngModel class="form-control form-textinput" placeholder="City" required>
-        <input name="street" type="text" ngModel class="form-control form-textinput" placeholder="Street" required>
-        <input name="number" type="text" ngModel class="form-control form-textinput" placeholder="Number" required>
-        <textarea name="description" type="text" ngModel class="form-control form-textinput" placeholder="Description" required></textarea>
-        <h6>Time</h6>
-
         <div class="row">
             <div class="md-form mx-1 my-2">
                 <div class="form-check form-switch">
-                    <input name="time1check" ngModel class="form-check-input" type="checkbox" id="check1">
+                    <input name="time1check" class="form-check-input"
+                           type="checkbox" id="check1"
+                           [checked]="this.old_check1"
+                           (change)="onKeyCheckbox($event,1)">
                     <label class="form-check-label" for="check1">Mon</label>
                 </div>
                 <label for="inputMDEx1o">Open</label>
-                <input name="time1Open" ngModel type="time" id="inputMDEx1o" class="form-control">
+                <input name="time1Open" type="time"
+                       id="inputMDEx1o" class="form-control" 
+                       [value]="this.old_timeOC1[0]"
+                       (change)="onKeyTime($event,1,false)">
                 <label for="inputMDEx1c">Close</label>
-                <input name="time1Close" ngModel type="time" id="inputMDEx1c" class="form-control">
+                <input name="time1Close" type="time"
+                       id="inputMDEx1c" class="form-control"
+                       [value]="this.old_timeOC1[1]"
+                       (change)="onKeyTime($event,1,true)">
             </div>
             <div class="md-form mx-1 my-2">
                 <div class="form-check form-switch">
-                    <input name="time2check" ngModel class="form-check-input" type="checkbox" id="check2">
+                    <input name="time2check" class="form-check-input"
+                           type="checkbox" id="check2"
+                           [checked]="this.old_check2"
+                           (change)="onKeyCheckbox($event,2)">
                     <label class="form-check-label" for="check2">Tue</label>
                 </div>
                 <label for="inputMDEx2o">Open</label>
-                <input name="time2Open" ngModel type="time" id="inputMDEx2o" class="form-control">
+                <input name="time2Open" type="time"
+                       id="inputMDEx2o" class="form-control"
+                       [value]="this.old_timeOC2[0]"
+                       (change)="onKeyTime($event,2,false)">
                 <label for="inputMDEx2c">Close</label>
-                <input name="time2Close" ngModel type="time" id="inputMDEx2c" class="form-control">
+                <input name="time2Close" type="time"
+                       id="inputMDEx2c" class="form-control"
+                       [value]="this.old_timeOC2[1]"
+                       (change)="onKeyTime($event,2,true)">
             </div>
             <div class="md-form mx-1 my-2">
                 <div class="form-check form-switch">
-                    <input name="time3check" ngModel class="form-check-input" type="checkbox" id="check3">
+                    <input name="time3check" ngModel class="form-check-input"
+                           type="checkbox" id="check3"
+                           [checked]="this.old_check3"
+                           (change)="onKeyCheckbox($event,3)">
                     <label class="form-check-label" for="check3">Wen</label>
                 </div>
                 <label for="inputMDEx3o">Open</label>
-                <input name="time3Open" ngModel type="time" id="inputMDEx3o" class="form-control">
+                <input name="time3Open" ngModel type="time"
+                       id="inputMDEx3o" class="form-control"
+                       [value]="this.old_timeOC3[0]"
+                       (change)="onKeyTime($event,3,false)">
                 <label for="inputMDEx3c">Close</label>
-                <input name="time3Close" ngModel type="time" id="inputMDEx3c" class="form-control">
+                <input name="time3Close" ngModel type="time"
+                       id="inputMDEx3c" class="form-control"
+                       [value]="this.old_timeOC3[1]"
+                       (change)="onKeyTime($event,3,true)">
             </div>
             <div class="md-form mx-1 my-2">
                 <div class="form-check form-switch">
-                    <input name="time4check" ngModel class="form-check-input" type="checkbox" id="check4">
+                    <input name="time4check" class="form-check-input"
+                           type="checkbox" id="check4"
+                           [checked]="this.old_check4"
+                           (change)="onKeyCheckbox($event,4)">
                     <label class="form-check-label" for="check4">Thu</label>
                 </div>
                 <label for="inputMDEx4o">Open</label>
-                <input name="time4Open" ngModel type="time" id="inputMDEx4o" class="form-control">
+                <input name="time4Open" type="time"
+                       id="inputMDEx4o" class="form-control"
+                       [value]="this.old_timeOC4[0]"
+                       (change)="onKeyTime($event,4,false)">
                 <label for="inputMDEx4c">Close</label>
-                <input name="time4Close" ngModel type="time" id="inputMDEx4c" class="form-control">
+                <input name="time4Close" type="time"
+                       id="inputMDEx4c" class="form-control"
+                       [value]="this.old_timeOC4[1]"
+                       (change)="onKeyTime($event,4,true)">
             </div>
             <div class="md-form mx-1 my-2">
                 <div class="form-check form-switch">
-                    <input name="time5check" ngModel class="form-check-input" type="checkbox" id="check5">
+                    <input name="time5check" class="form-check-input"
+                           type="checkbox" id="check5"
+                           [checked]="this.old_check5"
+                           (change)="onKeyCheckbox($event,5)">
                     <label class="form-check-label" for="check5">Fri</label>
                 </div>
                 <label for="inputMDEx5o">Open</label>
-                <input name="time5Open" ngModel type="time" id="inputMDEx5o" class="form-control">
+                <input name="time5Open" type="time"
+                       id="inputMDEx5o" class="form-control"
+                       [value]="this.old_timeOC5[0]"
+                       (change)="onKeyTime($event,5,false)">
                 <label for="inputMDEx5c">Close</label>
-                <input name="time5Close" ngModel type="time" id="inputMDEx5c" class="form-control">
+                <input name="time5Close" type="time"
+                       id="inputMDEx5c" class="form-control"
+                       [value]="this.old_timeOC5[1]"
+                       (change)="onKeyTime($event,5,true)">
             </div>
             <div class="md-form mx-1 my-2">
                 <div class="form-check form-switch">
-                    <input name="time6check" ngModel class="form-check-input" type="checkbox" id="check6">
+                    <input name="time6check" class="form-check-input"
+                           type="checkbox" id="check6"
+                           [checked]="this.old_check6"
+                           (change)="onKeyCheckbox($event,6)">
                     <label class="form-check-label" for="check6">Sat</label>
                 </div>
                 <label for="inputMDEx6o">Open</label>
-                <input name="time6Open" ngModel type="time" id="inputMDEx6o" class="form-control">
+                <input name="time6Open" type="time"
+                       id="inputMDEx6o" class="form-control"
+                       [value]="this.old_timeOC6[0]"
+                       (change)="onKeyTime($event,6,false)">
                 <label for="inputMDEx6c">Close</label>
-                <input name="time6Close" ngModel type="time" id="inputMDEx6c" class="form-control">
+                <input name="time6Close" type="time"
+                       id="inputMDEx6c" class="form-control"
+                       [value]="this.old_timeOC6[1]"
+                       (change)="onKeyTime($event,6,true)">
             </div>
             <div class="md-form mx-1 my-2">
                 <div class="form-check form-switch">
-                    <input name="time7check" ngModel class="form-check-input" type="checkbox" id="check7">
+                    <input name="time7check" class="form-check-input"
+                           type="checkbox" id="check7"
+                           [checked]="this.old_check7"
+                           (change)="onKeyCheckbox($event,7)">
                     <label class="form-check-label" for="check7">Sun</label>
                 </div>
                 <label for="inputMDEx7o">Open</label>
-                <input name="time7Open" ngModel type="time" id="inputMDEx7o" class="form-control">
+                <input name="time7Open" type="time"
+                       id="inputMDEx7o" class="form-control"
+                       [value]="this.old_timeOC7[0]"
+                       (change)="onKeyTime($event,7,false)">
                 <label for="inputMDEx7c">Close</label>
-                <input name="time7Close" ngModel type="time" id="inputMDEx7c" class="form-control">
+                <input name="time7Close" type="time"
+                       id="inputMDEx7c" class="form-control"
+                       [value]="this.old_timeOC7[1]" 
+                       (change)="onKeyTime($event,7,true)">
             </div>
         </div>
 
         <label class="alert-danger">{{errorMessage}}</label>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">Apply</button>
     </div>
+</form>
+
+<div>
+    <p>MO:{{this.dateinfoplace.mo}}<i>{{this.old_timeOC1}}</i>{{this.old_check1}}</p>
+    <p>TU:{{this.dateinfoplace.tu}}<i>{{this.old_timeOC2}}</i>{{this.old_check2}}</p>
+    <p>WE:{{this.dateinfoplace.we}}<i>{{this.old_timeOC3}}</i>{{this.old_check3}}</p>
+    <p>TH:{{this.dateinfoplace.th}}<i>{{this.old_timeOC4}}</i>{{this.old_check4}}</p>
+    <p>FR:{{this.dateinfoplace.fr}}<i>{{this.old_timeOC5}}</i>{{this.old_check5}}</p>
+    <p>SA:{{this.dateinfoplace.sat}}<i>{{this.old_timeOC6}}</i>{{this.old_check6}}</p>
+    <p>SU:{{this.dateinfoplace.sun}}<i>{{this.old_timeOC7}}</i>{{this.old_check7}}</p>
+</div>
+<div>
+    <p>MO:<i>{{this.new_timeOC1}}</i>{{this.new_check1}}</p>
+    <p>TU:<i>{{this.new_timeOC2}}</i>{{this.new_check2}}</p>
+    <p>WE:<i>{{this.new_timeOC3}}</i>{{this.new_check3}}</p>
+    <p>TH:<i>{{this.new_timeOC4}}</i>{{this.new_check4}}</p>
+    <p>FR:<i>{{this.new_timeOC5}}</i>{{this.new_check5}}</p>
+    <p>SA:<i>{{this.new_timeOC6}}</i>{{this.new_check6}}</p>
+    <p>SU:<i>{{this.new_timeOC7}}</i>{{this.new_check7}}</p>
+</div>
+
+<h5>Special Close date</h5>
+<form #createClForm="ngForm" (ngSubmit)="changeDateClose(createClForm)">
+    <h6>Time</h6>
+    <div class="form-group">
+        <div class="input-group">
+            <input class="form-control"
+                   placeholder="yyyy-mm-dd"
+                   name="dp_close" ngModel ngbDatepicker
+                   #d="ngbDatepicker"
+                   (click)="d.open()">
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Add</button>
 </form>

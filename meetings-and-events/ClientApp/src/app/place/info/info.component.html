@@ -55,8 +55,9 @@
         ></app-place-place-info>
       </div>
       <div *ngSwitchCase=false>
-        <app-place-meeting-info startdate="{{dateinfometting.startdate}}"
-                                enddate="{{dateinfometting.enddate}}"
+        <app-place-meeting-info date="{{dateinfometting.date}}" 
+                                starttime="{{dateinfometting.starttime}}"
+                                endtime="{{dateinfometting.endtime}}"
         ></app-place-meeting-info>
       </div>
     </div>

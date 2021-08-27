@@ -2,7 +2,8 @@
 {
     public class ResultPlaceDataMeeting
     {
-        public string startdate { get; set; }
-        public string enddate { get; set; }
+        public string date { get; set; }
+        public string starttime { get; set; }
+        public string endtime { get; set; }
     }
 }

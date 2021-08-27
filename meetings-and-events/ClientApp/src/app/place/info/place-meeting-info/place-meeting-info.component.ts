@@ -7,11 +7,13 @@ import {Component, Input} from '@angular/core';
 })
 
 export class PlaceMeetingInfoComponent {
-  @Input() startdate: string;
-  @Input() enddate: string;
+  @Input() date: string;
+  @Input() starttime: string;
+  @Input() endtime: string;
 }
 
 export class PLaceInfoDataMeeting {
-  startdate: string
-  enddate: string;
+  date: string;
+  starttime: string
+  endtime: string;
 }

@@ -45,6 +45,9 @@ export class EditPlaceComponent {
   loadInfo() {
     this.http.get<PlaceInfo>(this.baseUrl + 'place/placeinfo?id=' + this.placeId).subscribe(result => {
       this.placeInfo = result;
+      this.old_title = this.placeInfo.title;
+      this.old_address = this.placeInfo.address_city;
+      this.old_description = this.placeInfo.description;
     }, error => console.error(error));
   }
   
