@@ -905,8 +905,6 @@ namespace meetings_and_events.Controllers
                 }
             }
 
-            //TODO check and return index in database
-
             return Ok();
         }
 
@@ -990,8 +988,6 @@ namespace meetings_and_events.Controllers
                     }
                 }
             }
-
-            //TODO check and return index in database
 
             return Ok();
         }

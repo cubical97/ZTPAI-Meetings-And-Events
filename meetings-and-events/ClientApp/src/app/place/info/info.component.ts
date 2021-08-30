@@ -91,8 +91,6 @@ export class PlaceInfoComponent {
   }
 
   createComment(form: NgForm) {
-    //TODO check account, or login
-
     if (!form.value.comment || form.value.comment.length < 1)
       return;
 

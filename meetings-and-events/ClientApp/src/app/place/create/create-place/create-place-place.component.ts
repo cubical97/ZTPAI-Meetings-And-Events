@@ -98,7 +98,6 @@ export class CreatePlacePlaceComponent {
         }, error => {
           this.errorMessage = error.error;
         })
-    //TODO show error or go
   }
 
   checkTime(checkbox, time1, time2) {
