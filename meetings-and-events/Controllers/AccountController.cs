@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -46,7 +47,7 @@ namespace meetings_and_events.Controllers
 
                     if (users != null)
                     {
-                        return Ok(new {Token = CreateTokenString(users)});
+                        return Ok(new { Token = CreateTokenString(users) });
                     }
                 }
             }
@@ -168,7 +169,7 @@ namespace meetings_and_events.Controllers
                         _context.Users.Add(users);
                         _context.SaveChanges();
 
-                        return Ok(new {Token = CreateTokenString(users)});
+                        return Ok(new { Token = CreateTokenString(users) });
                     }
                     catch
                     {
@@ -186,7 +187,7 @@ namespace meetings_and_events.Controllers
 
             return Unauthorized("Can't create account!");
         }
-        
+
         // delete user
         [HttpPost, Route("delete")]
         [Authorize]
@@ -197,7 +198,7 @@ namespace meetings_and_events.Controllers
 
             if (String.IsNullOrWhiteSpace(user.Email) || String.IsNullOrWhiteSpace(user.Password))
                 return Unauthorized("Please, type login and password");
-            
+
             string get_email = "";
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             IEnumerable<Claim> claim = identity.Claims;
@@ -208,7 +209,7 @@ namespace meetings_and_events.Controllers
                 get_email = usernameClaim.Value;
             if (!get_email.Equals(user.Email))
                 return Unauthorized("Nice try");
-            
+
             try
             {
                 using (var _context = new AppDBContext())
@@ -322,7 +323,7 @@ namespace meetings_and_events.Controllers
                                 throw e;
                             }
                         }
-                        
+
                         return Ok();
                     }
                 }
@@ -331,7 +332,40 @@ namespace meetings_and_events.Controllers
             {
                 return Unauthorized("Error while deleting");
             }
+
             return Unauthorized("Wrong email or password");
+        }
+
+        [NonAction]
+        public static int GetUserIp(ClaimsIdentity identity)
+        {
+            int result = -1;
+            string get_email = null;
+
+            IEnumerable<Claim> claim = identity.Claims;
+            var usernameClaim = claim
+                .Where(x => x.Type == ClaimTypes.Name)
+                .FirstOrDefault();
+            if (usernameClaim == null)
+                return result;
+
+            get_email = usernameClaim.Value;
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    Users users = _context.Users.Where(users => (users.email == get_email))
+                        .FirstOrDefault();
+                    if (users != null)
+                        result = users.id_user;
+                }
+                catch
+                {
+                }
+            }
+
+            return result;
         }
     }
 }
