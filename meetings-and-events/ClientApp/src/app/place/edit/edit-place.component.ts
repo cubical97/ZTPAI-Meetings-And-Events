@@ -1,7 +1,7 @@
 ﻿import { Component, Inject } from '@angular/core';
 import { UploadDownloadService } from "../../../services/upload-download.service";
 import {ProgressStatus, ProgressStatusEnum} from "../../../models/progress-status.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 
@@ -21,13 +21,14 @@ export class EditPlaceComponent {
   private old_title: string;
   private old_description: string;
   private old_address: string;
-  
+
   private new_title: string;
   private new_description: string;
-  
+
   private baseUrl: string;
   private http: HttpClient;
-  constructor(private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string,
+
+  constructor(private router: Router, private route: ActivatedRoute, @Inject('BASE_URL') baseUrl: string,
               http: HttpClient) {
     this.baseUrl = baseUrl;
     this.http = http;
@@ -37,7 +38,7 @@ export class EditPlaceComponent {
     this.old_title = 'testowy tytul';
     this.old_description = 'testowy opis jest długi';
     this.old_address = "Aberta Zyruga Afka 41";
-    
+
     this.placeId = this.route.snapshot.paramMap.get('id');
     this.loadInfo();
   }
@@ -50,28 +51,37 @@ export class EditPlaceComponent {
       this.old_description = this.placeInfo.description;
     }, error => console.error(error));
   }
-  
+
   onKeyTitle(event: any) {
     this.new_title = event.target.value;
   }
-  
+
   onKeyDescription(event: any) {
     this.new_description = event.target.value;
   }
-  
+
   changename(form: NgForm) {
     if (this.new_title)
       this.old_title = this.new_title;
     if (this.new_description)
       this.old_description = this.new_description;
-  }
 
-  setModeOne() {
-    this.switch_expression = this.match_expression_1;
-  }
+    if (!this.new_title || this.new_title.length < 1)
+      return;
+    if (!this.new_description || this.new_description.length < 1)
+      this.new_description = null;
 
-  setModeMulti() {
-    this.switch_expression = this.match_expression_2;
+    const credentials = {
+      'place_id': this.placeId,
+      'title': this.new_title,
+      'description': this.new_description
+    }
+
+    this.http.post(this.baseUrl + "placeedit/edittitle", credentials)
+        .subscribe(response => {
+        }, error => {
+          console.error(error.error);
+        })
   }
 }
 

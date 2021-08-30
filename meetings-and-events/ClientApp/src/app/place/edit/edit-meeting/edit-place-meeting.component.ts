@@ -23,7 +23,7 @@ export class EditPlaceMeetingComponent {
   private old_starttime: string;
   private old_endtime: string;
 
-  private new_date: string;
+  private new_date: any;
   private new_starttime: string;
   private new_endtime: string;
 
@@ -59,9 +59,15 @@ export class EditPlaceMeetingComponent {
       return;
     }
     const credentials = {
+      'place_id': this.placeId,
       'datepicker': this.new_date,
       'timeOC:': [this.new_starttime, this.new_endtime]
     }
-    console.log(credentials);
+
+    this.http.post(this.baseUrl + "placeedit/editdatemeeting", credentials)
+        .subscribe(response => {
+        }, error => {
+          console.error(error.error);
+        })
   }
 }

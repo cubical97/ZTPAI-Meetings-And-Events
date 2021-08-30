@@ -83,7 +83,7 @@ namespace meetings_and_events.Controllers
                 credentials.timeOC4 == null && credentials.timeOC5 == null && credentials.timeOC6 == null &&
                 credentials.timeOC7 == null)
                 return BadRequest("No time set");
-            
+
             TimeSpan timeOpen;
             TimeSpan timeClose;
             if (credentials.timeOC1 != null)
@@ -226,15 +226,41 @@ namespace meetings_and_events.Controllers
                         {
                             int count_old = old_times_list.Length;
                             int count_new = new_times_list.Count;
+                            int index = 0;
+
                             if (count_old < count_new)
                             {
-                                // dodaj
+                                while (count_new > count_old)
+                                {
+                                    var new_record = new Place_data_multitime();
+                                    new_record.day_week = new_times_list[count_new - 1].day_week;
+                                    new_record.id_place = credentials.place_id;
+                                    new_record.start_date = new_times_list[count_new - 1].start_date;
+                                    new_record.end_date = new_times_list[count_new - 1].end_date;
+                                    _context.Place_data_multitime.Add(new_record);
+                                    count_new--;
+                                }
                             }
                             else if (count_old > count_new)
                             {
-                                //usun
+                                while (count_old > count_new)
+                                {
+                                    _context.Place_data_multitime.Remove(old_times_list[count_old - 1]);
+                                    count_old--;
+                                }
                             }
-                            // zastąp
+
+                            while (index < count_new)
+                            {
+                                old_times_list[index].day_week = new_times_list[index].day_week;
+                                old_times_list[index].start_date = new_times_list[index].start_date;
+                                old_times_list[index].end_date = new_times_list[index].end_date;
+
+                                _context.Place_data_multitime.Update(old_times_list[index]);
+                                index++;
+                            }
+
+                            _context.SaveChanges();
                         }
                     }
                 }

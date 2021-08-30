@@ -3,5 +3,6 @@
     public class RemoveClosedDateModel
     {
         public int place_id { get; set; }
+        //TODO
     }
 }

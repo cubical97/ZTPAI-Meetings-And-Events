@@ -137,6 +137,7 @@ export class EditPlacePlaceComponent {
       return;
 
     const credentials = {
+      'place-id': this.placeId,
       'timeOC1': timeday1,
       'timeOC2': timeday2,
       'timeOC3': timeday3,
@@ -145,7 +146,12 @@ export class EditPlacePlaceComponent {
       'timeOC6': timeday6,
       'timeOC7': timeday7
     }
-    console.log(credentials);
+
+    this.http.post(this.baseUrl + "placeedit/editdateplace", credentials)
+        .subscribe(response => {
+        }, error => {
+          console.error(error.error);
+        })
   }
 
   checkTime(checkbox, time1, time2) {
@@ -229,8 +235,14 @@ export class EditPlacePlaceComponent {
     if (!form.value.dp_close)
       return;
     const credentials = {
+      'place_id': this.placeId,
       'datepicker': form.value.dp_close
     }
-    console.log(credentials);
+
+    this.http.post(this.baseUrl + "placeedit/editdatemeeting", credentials)
+        .subscribe(response => {
+        }, error => {
+          console.error(error.error);
+        })
   }
 }
