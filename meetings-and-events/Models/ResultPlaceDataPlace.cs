@@ -9,6 +9,7 @@
         public string fr { get; set; }
         public string sat { get; set; }
         public string sun { get; set; }
+        public string[] closed { get; set; }
 
         public ResultPlaceDataPlace()
         {
@@ -19,6 +20,7 @@
             this.fr = "closed";
             this.sat = "closed";
             this.sun = "closed";
+            this.closed = null;
         }
     }
 }

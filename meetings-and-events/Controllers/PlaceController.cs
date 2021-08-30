@@ -130,6 +130,16 @@ namespace meetings_and_events.Controllers
                                 break;
                         }
                     }
+
+                    Place_special_close[] close_days =
+                        _context.Place_special_close.Where(close => (close.id_place == id)).ToArray();
+                    List<string> close_dates = new List<string>();
+                    foreach (Place_special_close close_day in close_days)
+                    {
+                        close_dates.Add(close_day.date.ToString("dd.MM"));
+                    }
+
+                    result.closed = close_dates.ToArray();
                 }
                 catch
                 {

@@ -50,8 +50,14 @@ export class EditPlaceMeetingComponent {
   }
 
   changeDate(form: NgForm) {
+    this.errorMessage = "";
     if (form.value.dp)
       this.new_date = form.value.dp;
+
+    if (this.new_starttime >= this.new_endtime) {
+      this.errorMessage = "End time must be after start time\n";
+      return;
+    }
     const credentials = {
       'datepicker': this.new_date,
       'timeOC:': [this.new_starttime, this.new_endtime]

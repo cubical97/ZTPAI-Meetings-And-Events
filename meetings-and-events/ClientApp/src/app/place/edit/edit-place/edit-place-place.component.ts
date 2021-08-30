@@ -109,6 +109,7 @@ export class EditPlacePlaceComponent {
   }
 
   apply(form: NgForm) {
+    this.errorMessage = "";
     var timeday1;
     var timeday2;
     var timeday3;

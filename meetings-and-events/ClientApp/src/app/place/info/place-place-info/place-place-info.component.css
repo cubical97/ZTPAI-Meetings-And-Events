@@ -1,3 +1,7 @@
 .row h6{
     margin-right: 0.5em;
 }
+
+.col {
+    min-width: 10em;
+}

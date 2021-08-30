@@ -14,6 +14,7 @@ export class PlacePlaceInfoComponent {
   @Input() fr: string;
   @Input() sat: string;
   @Input() sun: string;
+  @Input() closed: string[];
 }
 
 export class PLaceInfoDataPlace {
@@ -24,4 +25,5 @@ export class PLaceInfoDataPlace {
   fr: string;
   sat: string;
   sun: string;
+  closed: string[];
 }
