@@ -1,13 +1,11 @@
 <header>
     <div class="container">
         <div style="width: 100%" [ngSwitch]="placeInfo">
-            <!--
             <div style="width: 100%" *ngSwitchCase=undefined>
                 <div class="container-form">
                     <p><i>Loading...</i></p>
                 </div>
             </div>
-            -->
             <div style="width: 100%" *ngSwitchDefault>
                 <div class="container-form">
                     <h5>Edit name</h5>
@@ -25,12 +23,6 @@
                                   (keyup)="onKeyDescription($event)" ></textarea>
                         <button class="btn btn-success" type="submit">Apply</button>
                     </form>
-                </div>
-                <div class="container-form">
-                    <i>{{this.new_title}}</i>
-                    <i>{{this.new_description}}</i>
-                    <i>{{this.old_title}}</i>
-                    <i>{{this.old_description}}</i>
                 </div>
                     
                 <div class="container-form">
@@ -62,7 +54,7 @@
                 </div>
                 <div class="container-form">
                     <h5>Delete</h5>
-                    <button class="btn btn-danger">Delete</button>
+                    <button class="btn btn-danger" (click)="deleteplace()">Delete</button>
                 </div>
             </div>
         </div>

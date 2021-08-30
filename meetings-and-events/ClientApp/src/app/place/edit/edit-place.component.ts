@@ -72,13 +72,27 @@ export class EditPlaceComponent {
       this.new_description = null;
 
     const credentials = {
-      'place_id': this.placeId,
+      'place_id': parseInt(this.placeId),
       'title': this.new_title,
       'description': this.new_description
     }
 
     this.http.post(this.baseUrl + "placeedit/edittitle", credentials)
         .subscribe(response => {
+        }, error => {
+          console.error(error.error);
+        })
+  }
+  deleteplace() {
+    //todo ask
+
+    const credentials= {
+      'place_id': Number(this.placeId)
+    }
+    
+    this.http.post(this.baseUrl + "placeedit/removeplace", credentials)
+        .subscribe(response => {
+          this.router.navigateByUrl("/myplaces");
         }, error => {
           console.error(error.error);
         })

@@ -137,7 +137,7 @@ export class EditPlacePlaceComponent {
       return;
 
     const credentials = {
-      'place-id': this.placeId,
+      'place_id': Number(this.placeId),
       'timeOC1': timeday1,
       'timeOC2': timeday2,
       'timeOC3': timeday3,
@@ -197,8 +197,6 @@ export class EditPlacePlaceComponent {
   }
 
   onKeyTime(event: any, id: number, close: boolean) {
-    console.log(id);
-    console.log(event);
     switch (id) {
       case 1:
         if (close) this.new_timeOC1[1] = event.target.value;
@@ -235,11 +233,11 @@ export class EditPlacePlaceComponent {
     if (!form.value.dp_close)
       return;
     const credentials = {
-      'place_id': this.placeId,
+      'place_id': Number(this.placeId),
       'datepicker': form.value.dp_close
     }
 
-    this.http.post(this.baseUrl + "placeedit/editdatemeeting", credentials)
+    this.http.post(this.baseUrl + "placeedit/addcloseddate", credentials)
         .subscribe(response => {
         }, error => {
           console.error(error.error);

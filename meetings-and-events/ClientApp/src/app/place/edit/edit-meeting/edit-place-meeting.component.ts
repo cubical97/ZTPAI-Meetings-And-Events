@@ -35,7 +35,13 @@ export class EditPlaceMeetingComponent {
   ngOnInit() {
     this.http.get<PLaceInfoDataMeeting>(this.baseUrl + 'place/placeinfodatameeting?id=' + this.placeId).subscribe(result => {
       this.dateinfometting = result;
-      this.new_date = this.old_date = this.dateinfometting.date;
+      this.old_date = this.dateinfometting.date;
+      this.new_date= {
+        'year': Number(this.old_date.slice(0, 4)),
+        'month': Number(this.old_date.slice(5, 7)),
+        'day': Number(this.old_date.slice(8, 10))
+      }
+      
       this.new_starttime = this.old_starttime = this.dateinfometting.starttime;
       this.new_endtime = this.old_endtime = this.dateinfometting.endtime;
     }, error => console.error(error));
@@ -58,12 +64,14 @@ export class EditPlaceMeetingComponent {
       this.errorMessage = "End time must be after start time\n";
       return;
     }
+    
     const credentials = {
-      'place_id': this.placeId,
-      'datepicker': this.new_date,
-      'timeOC:': [this.new_starttime, this.new_endtime]
+      'timeopen': this.new_starttime,
+      'timeclose': this.new_endtime,
+      'place_id': Number(this.placeId),
+      'datepicker': this.new_date
     }
-
+    
     this.http.post(this.baseUrl + "placeedit/editdatemeeting", credentials)
         .subscribe(response => {
         }, error => {

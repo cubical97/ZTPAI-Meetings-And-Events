@@ -20,6 +20,9 @@ namespace meetings_and_events.Controllers
         [Authorize]
         public IActionResult EditTitle([FromBody] EditTitleModel credentials)
         {
+            if (credentials == null)
+                return BadRequest("Send credentials");
+            
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
             bool update = false;
@@ -60,6 +63,7 @@ namespace meetings_and_events.Controllers
                 }
                 catch
                 {
+                    return BadRequest("Invalid request");
                 }
             }
 
@@ -72,6 +76,9 @@ namespace meetings_and_events.Controllers
         [Authorize]
         public IActionResult EditDatePlace([FromBody] EditDatePlaceModel credentials)
         {
+            if (credentials == null)
+                return BadRequest("Send credentials");
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
             bool update = false;
@@ -153,116 +160,115 @@ namespace meetings_and_events.Controllers
                     if (record.id_user != id_user)
                         return Unauthorized("Account is not associated with place");
 
-                    var times = _context.Place_data_multitime.Where(place => id_user == credentials.place_id).ToArray();
-                    if (times != null && times.Length > 0)
+                    List<Place_data_multitime> new_times_list = new List<Place_data_multitime>();
+                    if (credentials.timeOC1 != null)
                     {
-                        List<Place_data_multitime> new_times_list = new List<Place_data_multitime>();
-                        if (credentials.timeOC1 != null)
-                        {
-                            Place_data_multitime new_multitime = new Place_data_multitime();
-                            new_multitime.day_week = E_day_week.MONDAY;
-                            new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC1[0]}:00");
-                            new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC1[1]}:00");
-                            new_times_list.Add(new_multitime);
-                        }
-
-                        if (credentials.timeOC2 != null)
-                        {
-                            Place_data_multitime new_multitime = new Place_data_multitime();
-                            new_multitime.day_week = E_day_week.TUESDAY;
-                            new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC2[0]}:00");
-                            new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC2[1]}:00");
-                            new_times_list.Add(new_multitime);
-                        }
-
-                        if (credentials.timeOC3 != null)
-                        {
-                            Place_data_multitime new_multitime = new Place_data_multitime();
-                            new_multitime.day_week = E_day_week.WEDNESDAY;
-                            new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC3[0]}:00");
-                            new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC3[1]}:00");
-                            new_times_list.Add(new_multitime);
-                        }
-
-                        if (credentials.timeOC4 != null)
-                        {
-                            Place_data_multitime new_multitime = new Place_data_multitime();
-                            new_multitime.day_week = E_day_week.THURSDAY;
-                            new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC4[0]}:00");
-                            new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC4[1]}:00");
-                            new_times_list.Add(new_multitime);
-                        }
-
-                        if (credentials.timeOC5 != null)
-                        {
-                            Place_data_multitime new_multitime = new Place_data_multitime();
-                            new_multitime.day_week = E_day_week.FRIDAY;
-                            new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC5[0]}:00");
-                            new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC5[1]}:00");
-                            new_times_list.Add(new_multitime);
-                        }
-
-                        if (credentials.timeOC6 != null)
-                        {
-                            Place_data_multitime new_multitime = new Place_data_multitime();
-                            new_multitime.day_week = E_day_week.SATURDAY;
-                            new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC6[0]}:00");
-                            new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC6[1]}:00");
-                            new_times_list.Add(new_multitime);
-                        }
-
-                        if (credentials.timeOC7 != null)
-                        {
-                            Place_data_multitime new_multitime = new Place_data_multitime();
-                            new_multitime.day_week = E_day_week.SUNDAY;
-                            new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC7[0]}:00");
-                            new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC7[1]}:00");
-                            new_times_list.Add(new_multitime);
-                        }
-
-                        var old_times_list = _context.Place_data_multitime
-                            .Where(place => (place.id_place == credentials.place_id)).ToArray();
-                        if (old_times_list != null)
-                        {
-                            int count_old = old_times_list.Length;
-                            int count_new = new_times_list.Count;
-                            int index = 0;
-
-                            if (count_old < count_new)
-                            {
-                                while (count_new > count_old)
-                                {
-                                    var new_record = new Place_data_multitime();
-                                    new_record.day_week = new_times_list[count_new - 1].day_week;
-                                    new_record.id_place = credentials.place_id;
-                                    new_record.start_date = new_times_list[count_new - 1].start_date;
-                                    new_record.end_date = new_times_list[count_new - 1].end_date;
-                                    _context.Place_data_multitime.Add(new_record);
-                                    count_new--;
-                                }
-                            }
-                            else if (count_old > count_new)
-                            {
-                                while (count_old > count_new)
-                                {
-                                    _context.Place_data_multitime.Remove(old_times_list[count_old - 1]);
-                                    count_old--;
-                                }
-                            }
-
-                            while (index < count_new)
-                            {
-                                old_times_list[index].day_week = new_times_list[index].day_week;
-                                old_times_list[index].start_date = new_times_list[index].start_date;
-                                old_times_list[index].end_date = new_times_list[index].end_date;
-
-                                _context.Place_data_multitime.Update(old_times_list[index]);
-                                index++;
-                            }
-
-                            _context.SaveChanges();
-                        }
+                        Place_data_multitime new_multitime = new Place_data_multitime();
+                        new_multitime.day_week = E_day_week.MONDAY;
+                        new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC1[0]}:00");
+                        new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC1[1]}:00");
+                        new_times_list.Add(new_multitime);
                     }
+
+                    if (credentials.timeOC2 != null)
+                    {
+                        Place_data_multitime new_multitime = new Place_data_multitime();
+                        new_multitime.day_week = E_day_week.TUESDAY;
+                        new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC2[0]}:00");
+                        new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC2[1]}:00");
+                        new_times_list.Add(new_multitime);
+                    }
+
+                    if (credentials.timeOC3 != null)
+                    {
+                        Place_data_multitime new_multitime = new Place_data_multitime();
+                        new_multitime.day_week = E_day_week.WEDNESDAY;
+                        new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC3[0]}:00");
+                        new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC3[1]}:00");
+                        new_times_list.Add(new_multitime);
+                    }
+
+                    if (credentials.timeOC4 != null)
+                    {
+                        Place_data_multitime new_multitime = new Place_data_multitime();
+                        new_multitime.day_week = E_day_week.THURSDAY;
+                        new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC4[0]}:00");
+                        new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC4[1]}:00");
+                        new_times_list.Add(new_multitime);
+                    }
+
+                    if (credentials.timeOC5 != null)
+                    {
+                        Place_data_multitime new_multitime = new Place_data_multitime();
+                        new_multitime.day_week = E_day_week.FRIDAY;
+                        new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC5[0]}:00");
+                        new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC5[1]}:00");
+                        new_times_list.Add(new_multitime);
+                    }
+
+                    if (credentials.timeOC6 != null)
+                    {
+                        Place_data_multitime new_multitime = new Place_data_multitime();
+                        new_multitime.day_week = E_day_week.SATURDAY;
+                        new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC6[0]}:00");
+                        new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC6[1]}:00");
+                        new_times_list.Add(new_multitime);
+                    }
+
+                    if (credentials.timeOC7 != null)
+                    {
+                        Place_data_multitime new_multitime = new Place_data_multitime();
+                        new_multitime.day_week = E_day_week.SUNDAY;
+                        new_multitime.start_date = TimeSpan.Parse($"{credentials.timeOC7[0]}:00");
+                        new_multitime.end_date = TimeSpan.Parse($"{credentials.timeOC7[1]}:00");
+                        new_times_list.Add(new_multitime);
+                    }
+
+                    var old_times_list = _context.Place_data_multitime
+                        .Where(place => (place.id_place == credentials.place_id)).ToArray();
+
+                    if (old_times_list != null)
+                    {
+                        int count_old = old_times_list.Length;
+                        int count_new = new_times_list.Count;
+                        int index = 0;
+                        
+                        if (count_old < count_new)
+                        {
+                            while (count_new > count_old)
+                            {
+                                var new_record = new Place_data_multitime();
+                                new_record.day_week = new_times_list[count_new - 1].day_week;
+                                new_record.id_place = credentials.place_id;
+                                new_record.start_date = new_times_list[count_new - 1].start_date;
+                                new_record.end_date = new_times_list[count_new - 1].end_date;
+                                _context.Place_data_multitime.Add(new_record);
+                                count_new--;
+                            }
+                        }
+                        else if (count_old > count_new)
+                        {
+                            while (count_old > count_new)
+                            {
+                                _context.Place_data_multitime.Remove(old_times_list[count_old - 1]);
+                                count_old--;
+                            }
+                        }
+
+                        while (index < count_new)
+                        {
+                            old_times_list[index].day_week = new_times_list[index].day_week;
+                            old_times_list[index].start_date = new_times_list[index].start_date;
+                            old_times_list[index].end_date = new_times_list[index].end_date;
+
+                            _context.Place_data_multitime.Update(old_times_list[index]);
+                            index++;
+                        }
+
+                        update = true;
+                        _context.SaveChanges();
+                    }
+
                 }
                 catch
                 {
@@ -279,6 +285,9 @@ namespace meetings_and_events.Controllers
         [Authorize]
         public IActionResult EditDateMeeting([FromBody] EditDateMeetingModel credentials)
         {
+            if (credentials == null)
+                return BadRequest("Send credentials");
+            
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
             bool update = false;
@@ -290,9 +299,9 @@ namespace meetings_and_events.Controllers
             {
                 try
                 {
-
-                    TimeSpan timeOpen = TimeSpan.Parse(credentials.timeOC[0]);
-                    TimeSpan timeClose = TimeSpan.Parse(credentials.timeOC[1]);
+                    TimeSpan timeOpen = TimeSpan.Parse(credentials.timeopen);
+                    TimeSpan timeClose = TimeSpan.Parse(credentials.timeclose);
+                    
                     if (timeOpen >= timeClose)
                         return BadRequest("Close time must be after open time");
 
@@ -310,17 +319,18 @@ namespace meetings_and_events.Controllers
                         update = true;
                         old_date.start_date = DateTime.Parse(
                             $"{credentials.datepicker.Day}/{credentials.datepicker.Month}/{credentials.datepicker.Year}" +
-                            $" {credentials.timeOC[0]}:00");
+                            $" {credentials.timeopen}:00");
                         old_date.end_date = DateTime.Parse(
                             $"{credentials.datepicker.Day}/{credentials.datepicker.Month}/{credentials.datepicker.Year}" +
-                            $" {credentials.timeOC[1]}:00");
+                            $" {credentials.timeclose}:00");
 
                         _context.Place_data_onetime.Update(old_date);
                         _context.SaveChanges();
                     }
                 }
-                catch
+                catch(Exception e)
                 {
+                    Console.WriteLine(e);
                     return BadRequest("Invalid request");
                 }
             }
@@ -334,6 +344,9 @@ namespace meetings_and_events.Controllers
         [Authorize]
         public IActionResult AddClosedDate([FromBody] AddClosedDateModel credentials)
         {
+            if (credentials == null)
+                return BadRequest("Send credentials");
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
             
@@ -371,6 +384,9 @@ namespace meetings_and_events.Controllers
         [Authorize]
         public IActionResult RemoveClosedDate([FromBody] RemoveClosedDateModel credentials)
         {
+            if (credentials == null)
+                return BadRequest("Send credentials");
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
 
@@ -414,6 +430,9 @@ namespace meetings_and_events.Controllers
         [Authorize]
         public IActionResult EditImage([FromBody] EditImageModel credentials)
         {
+            if (credentials == null)
+                return BadRequest("Send credentials");
+
             return BadRequest("TODO send image");
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -431,6 +450,7 @@ namespace meetings_and_events.Controllers
                 }
                 catch
                 {
+                    return BadRequest("Invalid request");
                 }
             }
 
@@ -443,6 +463,9 @@ namespace meetings_and_events.Controllers
         [Authorize]
         public IActionResult RemovePlace([FromBody] RemovePlaceModel credentials)
         {
+            if (credentials == null)
+                return BadRequest("Send credentials");
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
 
