@@ -1,0 +1,29 @@
+<h5>Edit name</h5>
+<form #createForm="ngForm" (ngSubmit)="changeDate(createForm)">
+    <h6>Time</h6>
+    <div class="form-group">
+        <div class="input-group">            
+            <input class="form-control"
+                   [value]="this.old_date"
+                   placeholder="yyyy-mm-dd"
+                   name="dp" ngModel ngbDatepicker
+                   #d="ngbDatepicker"
+                   (click)="d.open()">
+        </div>
+    </div>
+
+    <label for="inputMDEx1o">Start</label>
+    <input name="timeOpen" id="inputMDEx1o"
+           [value]="this.old_starttime"
+           type="time"class="form-control"
+           (change)="onKeyStarttime($event)">
+    <label for="inputMDEx1c">End</label>
+    <input name="timeClose" id="inputMDEx1c"
+           [value]="this.old_endtime"
+           type="time"
+           class="form-control"
+           (change)="onKeyEndtime($event)">
+
+    <label class="alert-danger">{{errorMessage}}</label>
+    <button class="btn btn-success" type="submit">Apply</button>
+</form>

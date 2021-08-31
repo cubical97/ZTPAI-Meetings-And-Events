@@ -1,0 +1,23 @@
+<header>
+    <div class="container">
+        <h1>CREATE</h1>
+        <div>
+            <button type="button" class="btn btn-outline-primary" (click)="setModeOne()">Event</button>
+            <button type="button" class="btn btn-outline-primary" (click)="setModeMulti()">Place</button>
+        </div>
+        
+        <div [ngSwitch]="switch_expression">
+            <div *ngSwitchCase="match_expression_1">
+                <!---->
+                <app-create-place-meeting></app-create-place-meeting>
+                <!---->
+            </div>
+            <div *ngSwitchCase="match_expression_2">
+                <!---->
+                <app-create-place-place></app-create-place-place>
+                <!---->
+            </div>
+        </div>
+
+    </div>
+</header>

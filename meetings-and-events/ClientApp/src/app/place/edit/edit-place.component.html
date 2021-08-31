@@ -1,0 +1,62 @@
+<header>
+    <div class="container">
+        <div style="width: 100%" [ngSwitch]="placeInfo">
+            <div style="width: 100%" *ngSwitchCase=undefined>
+                <div class="container-form">
+                    <p><i>Loading...</i></p>
+                </div>
+            </div>
+            <div style="width: 100%" *ngSwitchDefault>
+                <div class="container-form">
+                    <h5>Edit name</h5>
+                    <form #createForm="ngForm" (ngSubmit)="changename(createForm)">
+                        <label for="inputTitle">Title</label>
+                        <input class="form-control" id="inputTitle" 
+                               [value]="this.old_title" 
+                               (keyup)="onKeyTitle($event)" required>
+                        <label for="inputAddress">Address</label>
+                        <input class="form-control" id="inputAddress" 
+                               [value]="this.old_address" disabled>
+                        <label for="inputDescription">Description</label>
+                        <textarea class="form-control" style="resize: none" id="inputDescription" 
+                                  [value]="this.old_description" 
+                                  (keyup)="onKeyDescription($event)" ></textarea>
+                        <button class="btn btn-success" type="submit">Apply</button>
+                    </form>
+                </div>
+                    
+                <div class="container-form">
+                    <h5>Change image</h5>
+                    <app-edit-image placeIdIn="{{this.placeId}}" 
+                                    oldImageIn="{{this.placeInfo.image}}"
+                    ></app-edit-image>
+                </div>
+                    
+                <div [ngSwitch]="this.placeInfo.multitime">
+                    <div *ngSwitchCase="false">
+                        <!---->
+                        <div class="container-form">
+                            <h5>Edit date</h5>
+                            <app-edit-place-meeting placeId="{{this.placeId}}"
+                            ></app-edit-place-meeting>
+                        </div>
+                        <!---->
+                    </div>
+                    <div *ngSwitchCase="true">
+                        <!---->
+                        <div class="container-form">
+                            <h5>Edit date</h5>
+                            <app-edit-place-place placeId="{{this.placeId}}"
+                            ></app-edit-place-place>
+                        </div>
+                        <!---->
+                    </div>
+                </div>
+                <div class="container-form">
+                    <h5>Delete</h5>
+                    <button class="btn btn-danger" (click)="deleteplace()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

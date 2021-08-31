@@ -1,0 +1,19 @@
+<main>
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div *ngFor="let place of places">
+          <app-tile tile_id="{{place.id_place}}" 
+                    title="{{place.title}}" 
+                    image="{{place.image}}" 
+                    description="{{place.description}}" 
+                    address="{{place.address_city}}" 
+                    likes="{{place.rate_likes}}" 
+                    dislikes="{{place.rate_dislikes}}"
+                    username="{{place.users_username}}"
+          ></app-tile>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

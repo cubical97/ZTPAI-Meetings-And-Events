@@ -1,0 +1,14 @@
+<main>
+    <div class="container">
+      Comments
+      <div class="list">
+        <div *ngFor="let comment of comments">
+          <app-comments author="{{comment.author}}" 
+                        createdate="{{comment.createdate}}" 
+                        comment="{{comment.comment}}"
+                        comment_id="{{comment.comment_id}}"
+          ></app-comments>
+        </div>
+      </div>
+    </div>
+</main>

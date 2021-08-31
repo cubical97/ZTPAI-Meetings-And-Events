@@ -1,0 +1,21 @@
+﻿<main class="form-signin">
+  <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+    <h1 class="h3 mb-3 fw-normal">Create your account</h1>
+    <label class="visually-hidden">Name</label>
+    <input matInput name="name" type="text" ngModel class="form-control" placeholder="Username" required autofocus>
+    <label class="visually-hidden">Email address</label>
+    <input matInput name="email" type="email" ngModel class="form-control" placeholder="Email" required>
+    <label class="visually-hidden">Password</label>
+    <input matInput name="inputPassword" type="password" ngModel class="form-control" placeholder="Password" required>
+    <label class="visually-hidden">Password</label>
+    <input matInput name="inputPassword2" type="password" ngModel class="form-control" placeholder="Password" required>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
+    <div *ngIf="invalidRegister" class="alert alert-danger">
+      {{errorMessage}}
+    </div>
+
+    <p class="mt-5 mb-3 text-muted">&copy; 2021–2021</p>
+
+  </form>
+</main>
+

@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="imageContainer">
+        <input class="form-control"
+               name="file_image"
+               accept="image/*"
+               type="file" 
+               (change)="onFileChanged($event)">
+        <button class="btn btn-secondary" (click)="onUpload()">Upload and apply</button>
+    </div>
+    <div class="row">
+        <div class="col imageContainer">
+            <p>OLD</p>
+            <p><i>{{this.oldImage}}</i></p>
+            <img src="image/getimg?filename={{this.oldImage}}">
+        </div>
+        <div class="col imageContainer" [ngSwitch]="isNewImage">
+            <p>NEW</p>
+            <p><i>{{this.newImage}}</i></p>
+            <img *ngSwitchCase="true" src="image/getimg?filename={{this.newImage}}">
+        </div>
+    </div>
+</div>
