@@ -64,7 +64,6 @@ export class PlaceInfoComponent {
       if (this.multitime) {
         this.http.get<PLaceInfoDataPlace>(this.baseUrl + 'place/placeinfodataplace?id=' + this.placeId).subscribe(result => {
           this.dateinfoplace = result;
-          console.log(this.dateinfoplace.closed);////-------------
         }, error => console.error(error));
         this.dateinfometting = null;
       } else {

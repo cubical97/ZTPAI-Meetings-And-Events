@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using meetings_and_events.Data;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 
 namespace meetings_and_events.Controllers
 {
@@ -22,7 +24,7 @@ namespace meetings_and_events.Controllers
         {
             if (credentials == null)
                 return BadRequest("Send credentials");
-            
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
             bool update = false;
@@ -232,7 +234,7 @@ namespace meetings_and_events.Controllers
                         int count_old = old_times_list.Length;
                         int count_new = new_times_list.Count;
                         int index = 0;
-                        
+
                         if (count_old < count_new)
                         {
                             while (count_new > count_old)
@@ -287,7 +289,7 @@ namespace meetings_and_events.Controllers
         {
             if (credentials == null)
                 return BadRequest("Send credentials");
-            
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
             bool update = false;
@@ -301,7 +303,7 @@ namespace meetings_and_events.Controllers
                 {
                     TimeSpan timeOpen = TimeSpan.Parse(credentials.timeopen);
                     TimeSpan timeClose = TimeSpan.Parse(credentials.timeclose);
-                    
+
                     if (timeOpen >= timeClose)
                         return BadRequest("Close time must be after open time");
 
@@ -328,7 +330,7 @@ namespace meetings_and_events.Controllers
                         _context.SaveChanges();
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e);
                     return BadRequest("Invalid request");
@@ -349,10 +351,10 @@ namespace meetings_and_events.Controllers
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
-            
+
             if (id_user < 0)
                 return Unauthorized("No user");
-            
+
             using (var _context = new AppDBContext())
             {
                 try
@@ -426,27 +428,38 @@ namespace meetings_and_events.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost, DisableRequestSizeLimit]
         [Authorize]
-        public IActionResult EditImage([FromBody] EditImageModel credentials)
+        public IActionResult EditImage()
         {
-            if (credentials == null)
-                return BadRequest("Send credentials");
-
-            return BadRequest("TODO send image");
+            Place record = null;
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int id_user = AccountController.GetUserIp(identity);
-            bool update = false;
-
             if (id_user < 0)
                 return Unauthorized("No user");
+            int place_id;
+            try
+            {
+                var place_id1 = Request.Form["place_id"];
+                place_id = Int32.Parse(place_id1);
+            }
+            catch
+            {
+                return BadRequest("Invalid request: place id");
+            }
+
 
             using (var _context = new AppDBContext())
             {
                 try
                 {
-                    //TODO image 
+                    record = _context.Place.Where(place => (place.id_place == place_id))
+                        .FirstOrDefault();
+                    if (record == null)
+                        return BadRequest("Place not exists");
+                    if (record.id_user != id_user)
+                        return Unauthorized("Account is not associated with place");
                 }
                 catch
                 {
@@ -454,9 +467,57 @@ namespace meetings_and_events.Controllers
                 }
             }
 
-            if (update)
-                return Ok();
-            return BadRequest("No action");
+            try
+            {
+                var file = Request.Form.Files[0];
+
+                var folderName = Path.Combine("PublicImages", "Uploads");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim();
+                    fileName = $"{place_id}.{file.ContentType.Split('/')[1]}";
+
+                    var fullPath = Path.Combine(pathToSave, fileName.ToString());
+                    var dbPath = Path.Combine(folderName, fileName.ToString());
+
+                    if (record.image != null)
+                    {
+                        var oldPath = Path.Combine("PublicImages", record.image);
+                        FileInfo oldFile = new FileInfo(oldPath);
+                        if (oldFile.Exists)
+                            oldFile.Delete();
+                    }
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    using (var _context = new AppDBContext())
+                    {
+                        try
+                        {
+                            record.image = Path.Combine("Uploads", fileName.ToString());
+                            _context.Place.Update(record);
+                            _context.SaveChanges();
+                        }
+                        catch
+                        {
+                            return BadRequest("Invalid request");
+                        }
+                    }
+                    return Ok(fileName);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return BadRequest("Internal server error");
+            }
         }
 
         [HttpPost]

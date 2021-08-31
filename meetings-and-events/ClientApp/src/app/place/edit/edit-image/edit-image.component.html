@@ -3,8 +3,9 @@
         <input class="form-control"
                name="file_image"
                accept="image/*"
-               type="file">
-        <button class="btn btn-secondary">Upload and apply</button>
+               type="file" 
+               (change)="onFileChanged($event)">
+        <button class="btn btn-secondary" (click)="onUpload()">Upload and apply</button>
     </div>
     <div class="row">
         <div class="col imageContainer">
