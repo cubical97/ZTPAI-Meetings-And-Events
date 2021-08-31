@@ -336,8 +336,65 @@ namespace meetings_and_events.Controllers
             return Unauthorized("Wrong email or password");
         }
 
+        [HttpPost, Route("changepass")]
+        [Authorize]
+        public IActionResult ChangePass([FromBody] ChangePassModel new_pass)
+        {
+            if (new_pass == null)
+                return BadRequest("Send credentials");
+
+            if (new_pass.Password1.Length < 1 || new_pass.Password2.Length < 8 || new_pass.Password3.Length < 8)
+                return BadRequest("Password is too short");
+            if (new_pass.Password1.Equals(new_pass.Password2))
+                return BadRequest("New password must be different");
+            if (!new_pass.Password2.Equals(new_pass.Password3))
+                return BadRequest("Confirm new password must be identical");
+
+            string get_email;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+            var usernameClaim = claim
+                .Where(x => x.Type == ClaimTypes.Name)
+                .FirstOrDefault();
+
+            get_email = usernameClaim.Value;
+            if (get_email == null || get_email.Length < 1)
+                return Unauthorized("Invalid user");
+
+            using (var _context = new AppDBContext())
+            {
+                try
+                {
+                    byte[] oldpass;
+                    using (SHA256 mySHA256 = SHA256.Create())
+                    {
+                        oldpass = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(new_pass.Password1));
+                    }
+
+                    var record = _context.Users.Where(users => (users.email == get_email && users.password == oldpass))
+                        .FirstOrDefault();
+                    if (record == null)
+                        return BadRequest("User not found");
+
+                    using (SHA256 mySHA256 = SHA256.Create())
+                    {
+                        record.password = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(new_pass.Password2));
+                    }
+
+                    _context.Users.Update(record);
+                    _context.SaveChanges();
+                }
+                catch
+                {
+                    return BadRequest("Invalid request");
+                }
+            }
+
+            return Ok();
+        }
+
         [NonAction]
-        public static int GetUserIp(ClaimsIdentity identity)
+        public static int GetUserId(ClaimsIdentity identity)
         {
             int result = -1;
             string get_email = null;

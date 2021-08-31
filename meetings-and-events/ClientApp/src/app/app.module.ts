@@ -40,9 +40,6 @@ import { UserListFollowComponent} from './user/user-list-follow/user-list-follow
 import { UserListJoinComponent} from './user/user-list-join/user-list-join.component';
 import { UserOptionsComponent} from './user/user-options/user-options.component';
 
-import { UploadDownloadService } from '../services/upload-download.service';
-import { UploadComponent } from './upload/upload.component';
-
 import { CookieService } from "ngx-cookie-service";
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuardService } from "../services/auth-guard.service";
@@ -77,8 +74,7 @@ export function tokenGetter() {
     UserCreatedPlacesComponent,
     UserListFollowComponent,
     UserListJoinComponent,
-    UserOptionsComponent,
-    UploadComponent
+    UserOptionsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -107,7 +103,7 @@ export function tokenGetter() {
       }
     })
   ],
-  providers: [UploadDownloadService, CookieService, AuthGuardService],
+  providers: [CookieService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

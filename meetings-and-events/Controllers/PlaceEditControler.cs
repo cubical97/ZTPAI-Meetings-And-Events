@@ -26,7 +26,7 @@ namespace meetings_and_events.Controllers
                 return BadRequest("Send credentials");
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int id_user = AccountController.GetUserIp(identity);
+            int id_user = AccountController.GetUserId(identity);
             bool update = false;
 
             if (id_user < 0)
@@ -82,7 +82,7 @@ namespace meetings_and_events.Controllers
                 return BadRequest("Send credentials");
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int id_user = AccountController.GetUserIp(identity);
+            int id_user = AccountController.GetUserId(identity);
             bool update = false;
 
             if (id_user < 0)
@@ -291,7 +291,7 @@ namespace meetings_and_events.Controllers
                 return BadRequest("Send credentials");
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int id_user = AccountController.GetUserIp(identity);
+            int id_user = AccountController.GetUserId(identity);
             bool update = false;
 
             if (id_user < 0)
@@ -350,7 +350,7 @@ namespace meetings_and_events.Controllers
                 return BadRequest("Send credentials");
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int id_user = AccountController.GetUserIp(identity);
+            int id_user = AccountController.GetUserId(identity);
 
             if (id_user < 0)
                 return Unauthorized("No user");
@@ -390,7 +390,7 @@ namespace meetings_and_events.Controllers
                 return BadRequest("Send credentials");
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int id_user = AccountController.GetUserIp(identity);
+            int id_user = AccountController.GetUserId(identity);
 
             if (id_user < 0)
                 return Unauthorized("No user");
@@ -435,7 +435,7 @@ namespace meetings_and_events.Controllers
             Place record = null;
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int id_user = AccountController.GetUserIp(identity);
+            int id_user = AccountController.GetUserId(identity);
             if (id_user < 0)
                 return Unauthorized("No user");
             int place_id;
@@ -507,6 +507,7 @@ namespace meetings_and_events.Controllers
                             return BadRequest("Invalid request");
                         }
                     }
+
                     return Ok(fileName);
                 }
                 else
@@ -528,7 +529,7 @@ namespace meetings_and_events.Controllers
                 return BadRequest("Send credentials");
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int id_user = AccountController.GetUserIp(identity);
+            int id_user = AccountController.GetUserId(identity);
 
             if (id_user < 0)
                 return Unauthorized("No user");

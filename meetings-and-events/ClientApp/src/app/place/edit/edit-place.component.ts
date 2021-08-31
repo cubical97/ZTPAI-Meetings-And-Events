@@ -1,6 +1,4 @@
 ﻿import { Component, Inject } from '@angular/core';
-import { UploadDownloadService } from "../../../services/upload-download.service";
-import {ProgressStatus, ProgressStatusEnum} from "../../../models/progress-status.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
@@ -84,8 +82,6 @@ export class EditPlaceComponent {
         })
   }
   deleteplace() {
-    //todo ask
-
     const credentials= {
       'place_id': Number(this.placeId)
     }

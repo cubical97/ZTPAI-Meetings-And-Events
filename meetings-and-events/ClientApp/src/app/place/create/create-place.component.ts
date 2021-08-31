@@ -1,6 +1,4 @@
 ﻿import { Component, Inject } from '@angular/core';
-import { UploadDownloadService } from "../../../services/upload-download.service";
-import {ProgressStatus, ProgressStatusEnum} from "../../../models/progress-status.model";
 
 @Component({
   selector: 'app-create-place',
